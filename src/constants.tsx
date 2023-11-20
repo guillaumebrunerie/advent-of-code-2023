@@ -1,5 +1,5 @@
 export const fps = 60;
-export const dayDuration = 9;
+export const dayDuration = 12;
 export const width = 1920;
 export const height = 1080;
 

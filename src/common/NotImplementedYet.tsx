@@ -8,7 +8,7 @@ export const NotImplementedYet = ({ day }: { day: number }) => {
 		<AbsoluteFill
 			style={{
 				backgroundColor: "black",
-				color: "white",
+				color: "#AAA",
 				fontSize: 50,
 				display: "grid",
 				alignItems: "center",

@@ -26,8 +26,9 @@ export const RemotionRoot: React.FC = () => {
 				width={width}
 				height={height}
 			/>
-			{allDays.map((Day, i) => (
+			{allDays.map(({Day}, i) => (
 				<Composition
+					key={i}
 					id={`Day${i + 1}`}
 					component={Day}
 					durationInFrames={dayDuration * fps}
