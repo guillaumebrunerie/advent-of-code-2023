@@ -2,7 +2,6 @@ node_modules
 dist
 .DS_Store
 .env
-raw.tsx
 
 # Ignore the output video from Git but not videos you import into src/.
 out

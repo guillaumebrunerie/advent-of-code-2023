@@ -1,11 +1,12 @@
+import { useMemo } from "react";
 import { useCurrentFrame, useVideoConfig } from "remotion";
-import { Background } from "../common/Background";
+
 import { Circle } from "../common/Circle";
 import { parse } from "./parse";
 import { poissonDiskSampling } from "./poissonDiskSampling";
 import { raw } from "./raw";
-import { useMemo } from "react";
-import { dayDuration } from "../constants";
+import { black, grey, dayDuration, white, red } from "../constants";
+import { DayWrapper } from "../FullVideo/DayWrapper";
 
 const data = parse(raw);
 console.log(data.length, data);
@@ -40,32 +41,31 @@ const getResult2 = (input: [string, string]) => {
 
 export const Day2 = () => {
 	const r = 11;
-	const points = useMemo(() => poissonDiskSampling(1920 - r * 2, 1080 - r * 2, r * 2).toSorted((p, q) => p.x - q.x), [r]);
-	console.log(points.length);
+	const {fps, width, height} = useVideoConfig();
+	const points = useMemo(() => poissonDiskSampling(width - r * 2, height - r * 2, r * 2).toSorted((p, q) => p.x - q.x), [r, width, height]);
 
 	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
 
+	const speed = points.length / (dayDuration * fps) * 2;
 	const getColor = (i: number) => {
-		if (i >= frame * 7) {
-			return "#222";
+		if (i >= frame * speed) {
+			return black;
 		}
-		if (i >= (frame - dayDuration * fps / 2) * 7) {
-			return getResult(data[i]) === "win" ? "white"
-				: getResult(data[i]) === "lose" ? "black"
-					: "grey";
+		if (i >= (frame - dayDuration * fps / 2) * speed) {
+			return getResult(data[i]) === "win" ? red
+				: getResult(data[i]) === "lose" ? grey
+					: white;
 		}
-			return getResult2(data[i]) === "win" ? "white"
-				: getResult2(data[i]) === "lose" ? "black"
-					: "grey";
+		return getResult2(data[i]) === "win" ? red
+			: getResult2(data[i]) === "lose" ? grey
+				: white;
 	}
 
 	return (
-		<>
-			<Background/>
+		<DayWrapper day={2} title="Calorie counting">
 			{points.map(({x, y}, i) => (
 				<Circle key={i} r={10} cx={x + r} cy={y + r} color={getColor(i)}/>
 			))}
-		</>
+		</DayWrapper>
 	);
 };

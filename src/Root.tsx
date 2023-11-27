@@ -10,7 +10,7 @@ import {
 	width,
 } from "./constants";
 
-export const RemotionRoot: React.FC = () => {
+export const RemotionRoot = () => {
 	return (
 		<>
 			<Composition
@@ -26,10 +26,10 @@ export const RemotionRoot: React.FC = () => {
 				width={width}
 				height={height}
 			/>
-			{allDays.map(({Day}, i) => (
+			{allDays.map(({Day, day}, i) => (
 				<Composition
 					key={i}
-					id={`Day${i + 1}`}
+					id={`Day${day}`}
 					component={Day}
 					durationInFrames={dayDuration * fps}
 					fps={fps}

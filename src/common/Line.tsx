@@ -8,7 +8,7 @@ export type Point = {
 export const Line = ({
 	from,
 	to,
-	color = "#999",
+	color,
 	width = 5,
 }: {
 	from: Point;

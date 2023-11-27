@@ -1,11 +1,12 @@
 import { AbsoluteFill } from "remotion";
+import { black } from "../constants";
 
 export const Background = () => {
 	return (
 		<AbsoluteFill
 			style={{
-				backgroundColor: "black",
-				color: "white",
+				backgroundColor: black,
+				height: "101%",
 			}}
 		/>
 	);
