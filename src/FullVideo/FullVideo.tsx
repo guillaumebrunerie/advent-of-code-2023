@@ -4,8 +4,6 @@ import { dayDuration, introDuration, outroDuration } from "../constants";
 import { Intro } from "./Intro";
 import { Outro } from "./Outro";
 
-import "../index.css";
-
 export const FullVideo = () => {
 	const { fps } = useVideoConfig();
 	return (
@@ -19,7 +17,7 @@ export const FullVideo = () => {
 					from={(introDuration + i * dayDuration) * fps}
 					durationInFrames={dayDuration * fps}
 				>
-					<Day/>
+					<Day dayDuration={dayDuration}/>
 				</Sequence>
 			))}
 			<Sequence

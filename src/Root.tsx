@@ -9,6 +9,7 @@ import {
 	outroDuration,
 	width,
 } from "./constants";
+import { z } from "zod";
 
 export const RemotionRoot = () => {
 	return (
@@ -26,12 +27,20 @@ export const RemotionRoot = () => {
 				width={width}
 				height={height}
 			/>
-			{allDays.map(({Day, day}, i) => (
+			{allDays.map(({Day, day, fullDuration}, i) => (
 				<Composition
 					key={i}
 					id={`Day${day}`}
 					component={Day}
-					durationInFrames={dayDuration * fps}
+					schema={z.object({
+						dayDuration: z.number(),
+					})}
+					defaultProps={{
+						dayDuration: fullDuration,
+					}}
+					calculateMetadata={({props}) => {
+						return {durationInFrames: props.dayDuration * fps, props};
+					}}
 					fps={fps}
 					width={width}
 					height={height}

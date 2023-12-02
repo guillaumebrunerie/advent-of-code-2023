@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { fontFamily, white } from "../constants";
+import { dayDuration, fontFamily, white } from "../constants";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 
 export const NotImplementedYet = ({ day }: { day: number }) => {
@@ -7,7 +7,7 @@ export const NotImplementedYet = ({ day }: { day: number }) => {
 	const { durationInFrames } = useVideoConfig();
 
 	return (
-		<DayWrapper day={day} title="TODO">
+		<DayWrapper day={day} title="TODO" dayDuration={dayDuration}>
 			<AbsoluteFill
 				style={{
 					color: white,

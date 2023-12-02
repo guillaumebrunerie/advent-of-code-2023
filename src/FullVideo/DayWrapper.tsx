@@ -1,28 +1,36 @@
-import { Audio, staticFile } from "remotion";
+import { Audio, Sequence, staticFile, useCurrentFrame } from "remotion";
 
 import { Wrapper } from "../common/Wrapper"
 import { Title } from "./Title";
 import { InitialFlash, FinalFlash, MidFlash } from "../common/Flashes";
-import { dayDuration } from "../constants";
 import { Background } from "../common/Background";
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
+import { fps } from "../constants";
 
 type DayWrapperProps = {
 	day: number,
 	title: string,
+	dayDuration: number,
 	children: ReactNode,
+	style?: CSSProperties,
 };
 
-export const DayWrapper = ({day, title, children}: DayWrapperProps) => {
+export const DayWrapper = ({day, title, dayDuration, children, style}: DayWrapperProps) => {
+	const frame = useCurrentFrame();
+	const progress = frame / (fps * dayDuration);
 	return (
-		<Wrapper>
+		<Wrapper style={style}>
 			<Background />
 			{children}
-			<Title title={`Day ${day}: ${title}`}/>
-			<Audio src={staticFile(`Day${day}.wav`)}/>
+			<Title title={`Day ${day}: ${title}`} progress={progress}/>
 			<InitialFlash />
-			<MidFlash/>
-			<FinalFlash duration={dayDuration} />
+			<MidFlash dayDuration={dayDuration}/>
+			<FinalFlash dayDuration={dayDuration} />
+			{Array(dayDuration / 16).fill(null).map((_, i) => (
+				<Sequence from={fps * i * 16}>
+					<Audio src={staticFile(`Day${day}.wav`)}/>
+				</Sequence>
+			))}
 		</Wrapper>
 	);
 };

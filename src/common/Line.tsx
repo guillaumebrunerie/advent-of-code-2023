@@ -9,12 +9,12 @@ export const Line = ({
 	from,
 	to,
 	color,
-	width = 5,
+	width,
 }: {
 	from: Point;
 	to: Point;
-	color?: string;
-	width?: number;
+	color: string;
+	width: number;
 }) => {
 	const deltaX = to.x - from.x;
 	const deltaY = to.y - from.y;

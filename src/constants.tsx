@@ -2,9 +2,9 @@ export const width = 1920;
 export const height = 1080;
 export const fps = 60;
 
-export const dayDuration = 12;
+export const dayDuration = 16;
 export const introDuration = 6;
-export const outroDuration = 6;
+export const outroDuration = 8;
 
 export const attackDuration = 0.04;
 
@@ -19,7 +19,5 @@ export const clamp = {
 	extrapolateRight: "clamp",
 } as const;
 
-// {}import { loadFont } from "@remotion/google-fonts/SourceCodePro";
-// export const { fontFamily } = loadFont();
-export const fontFamily = "Source Code Pro";
-// {}export const fontFamily = "monospace";
+import { loadFont } from "@remotion/google-fonts/SourceCodePro";
+export const { fontFamily } = loadFont();

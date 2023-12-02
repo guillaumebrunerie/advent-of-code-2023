@@ -6,7 +6,7 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from "remotion";
-import { clamp, introDuration } from "../constants";
+import { clamp } from "../constants";
 import { Wrapper } from "../common/Wrapper";
 import { InitialFlash } from "../common/Flashes";
 import { Background } from "../common/Background";
@@ -17,7 +17,7 @@ export const Outro = () => {
 
 	const fadeOut = interpolate(
 		frame / fps,
-		[introDuration - 0.5, introDuration],
+		[5.5, 6],
 		[1, 0],
 		clamp,
 	);

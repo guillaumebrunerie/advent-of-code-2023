@@ -1,6 +1,7 @@
 import {
 	AbsoluteFill,
 	Audio,
+	Sequence,
 	interpolate,
 	staticFile,
 	useCurrentFrame,
@@ -16,9 +17,9 @@ export const Intro = () => {
 
 	const fadeOut = 1;
 
-	const fadeIn = interpolate(frame / fps, [0.5, 1], [0, 1], clamp);
+	const fadeIn = interpolate(frame / fps, [1.5, 2], [0, 1], clamp);
 
-	const fadeIn2 = interpolate(frame / fps, [2.5, 3], [0, 1], clamp);
+	const fadeIn2 = interpolate(frame / fps, [3.5, 4], [0, 1], clamp);
 
 	const opacity = fadeIn * fadeOut;
 	const opacity2 = fadeIn2 * fadeOut;
@@ -54,8 +55,10 @@ export const Intro = () => {
 					</span>
 				</div>
 			</AbsoluteFill>
-			<Audio src={staticFile("Intro.wav")}/>
-			<FinalFlash duration={introDuration}/>
+			<Sequence from={2 * fps}>
+				<Audio src={staticFile("Intro.wav")}/>
+			</Sequence>
+			<FinalFlash dayDuration={introDuration}/>
 		</Wrapper>
 	);
 };

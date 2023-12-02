@@ -5,7 +5,7 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from "remotion";
-import { white, clamp, attackDuration, dayDuration } from "../constants";
+import { white, clamp, attackDuration } from "../constants";
 
 export const InitialFlash = () => {
 	const { fps } = useVideoConfig();
@@ -17,16 +17,16 @@ export const InitialFlash = () => {
 	return <AbsoluteFill style={{ backgroundColor: white, opacity }} />;
 };
 
-export const FinalFlash = ({duration}: {duration: number}) => {
+export const FinalFlash = ({dayDuration}: {dayDuration: number}) => {
 	const { fps } = useVideoConfig();
 	const frame = useCurrentFrame();
-	const opacity = interpolate(frame / fps, [duration - attackDuration, duration], [0, 1], {
+	const opacity = interpolate(frame / fps, [dayDuration - attackDuration, dayDuration], [0, 1], {
 		...clamp,
 	});
 	return <AbsoluteFill style={{ backgroundColor: white, opacity }} />;
 };
 
-export const MidFlash = () => {
+export const MidFlash = ({dayDuration}: {dayDuration: number}) => {
 	const { fps } = useVideoConfig();
 	const frame = useCurrentFrame();
 	const opacity = interpolate(frame / fps, [dayDuration / 2 - attackDuration, dayDuration / 2], [0, 1], {
