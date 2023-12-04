@@ -101,7 +101,7 @@ const Showing = ({showing, dayData, i: j, x, y, t, seed}: {
 	seed: string,
 }) => {
 	const time = useCurrentTime();
-	const localTime = time - t + 0.1;
+	const localTime = time - t + 0.05;
 
 	const phase = random(`showing(${seed})`) * Math.PI * 2;
 	const amount = showing.red + showing.green + showing.blue;
@@ -148,9 +148,9 @@ const Showing = ({showing, dayData, i: j, x, y, t, seed}: {
 	makeCubes(showing.green, dayData.day, dayData.green, styles.green, showing.red);
 	makeCubes(showing.blue, dayData.day, dayData.blue, styles.blue, showing.red + showing.green);
 
-	const opacity = interpolate(localTime, [0, 0.1, 0.7], [0, 1, 0], clamp);
-	const ghostOpacity = interpolate(localTime, [0, 0.1, 0.9, 1], [0, 1, 1, 0], clamp);
-	const flashOpacity = interpolate(localTime, [0, 0.1, 0.9, 1], [0, 1, 1, 0], clamp);
+	const opacity = interpolate(localTime, [0, 0.05, 0.7], [0, 1, 0], clamp);
+	const ghostOpacity = interpolate(localTime, [0, 0.05, 0.9, 1], [0, 1, 1, 0], clamp);
+	const flashOpacity = interpolate(localTime, [0, 0.05, 0.9, 1], [0, 1, 1, 0], clamp);
 
 	return (
 		<div>
@@ -178,22 +178,31 @@ const Game = ({game, t, seed, isPart1}: {game: ShowingT[], t: number, seed: numb
 		green: Math.max(...game.map(showing => showing.green)),
 		blue: Math.max(...game.map(showing => showing.blue)),
 	};
+	const pickIndex = (
+		necessary: (showing: ShowingT) => boolean,
+		optional: (showing: ShowingT) => boolean,
+		seed: string,
+	) => (
+		pickIndexIf(game, showing => (
+			necessary(showing) && optional(showing)
+		), seed) ?? pickIndexIf(game, necessary, `${seed},2`) ?? 0
+	);
 	const maxIndices = {
-		red: pickIndexIf(game, showing => (
-			showing.red === max.red && showing.green !== max.green && showing.blue !== max.blue
-		), `red(${seed})`) ?? pickIndexIf(game, showing => (
-			showing.red === max.red
-		), `red2(${seed})`) ?? 0,
-		green: pickIndexIf(game, showing => (
-			showing.red !== max.red && showing.green === max.green && showing.blue !== max.blue
-		), `green(${seed})`) ?? pickIndexIf(game, showing => (
-			showing.green === max.green
-		), `green2(${seed})`) ?? 0,
-		blue: pickIndexIf(game, showing => (
-			showing.red !== max.red && showing.green !== max.green && showing.blue === max.blue
-		), `blue(${seed})`) ?? pickIndexIf(game, showing => (
-			showing.blue === max.blue
-		), `blue2(${seed})`) ?? 0,
+		red: pickIndex(
+			showing => showing.red === max.red,
+			showing => showing.green !== max.green && showing.blue !== max.blue,
+			`red,${seed}`,
+		),
+		green: pickIndex(
+			showing => showing.green === max.green,
+			showing => showing.blue !== max.blue && showing.red !== max.red,
+			`green,${seed}`,
+		),
+		blue: pickIndex(
+			showing => showing.blue === max.blue,
+			showing => showing.red !== max.red && showing.green !== max.green,
+			`blue,${seed}`,
+		),
 	};
 	const showingPositions = useMemo(() => poissonDiskSamplingFixedSize(width, height, game.length, `showings,${seed}`), [game, seed])
 	return (

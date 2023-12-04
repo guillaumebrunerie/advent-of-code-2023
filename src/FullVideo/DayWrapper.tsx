@@ -15,6 +15,8 @@ type DayWrapperProps = {
 	style?: CSSProperties,
 };
 
+const enableInterFlash = true;
+
 export const DayWrapper = ({day, title, dayDuration, children, style}: DayWrapperProps) => {
 	const frame = useCurrentFrame();
 	const progress = frame / (fps * dayDuration);
@@ -23,9 +25,13 @@ export const DayWrapper = ({day, title, dayDuration, children, style}: DayWrappe
 			<Background />
 			{children}
 			<Title title={`Day ${day}: ${title}`} progress={progress}/>
-			<InitialFlash />
 			<MidFlash dayDuration={dayDuration}/>
-			<FinalFlash dayDuration={dayDuration} />
+			{enableInterFlash && (
+				<>
+					<InitialFlash />
+					<FinalFlash dayDuration={dayDuration} />
+				</>
+			)}
 			{Array(dayDuration / 16).fill(null).map((_, i) => (
 				<Sequence from={fps * i * 16}>
 					<Audio src={staticFile(`Day${day}.wav`)}/>

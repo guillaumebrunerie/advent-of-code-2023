@@ -23,20 +23,21 @@ export const Title = ({title, progress}: {title: string, progress: number}) => {
 					width: `${progress * 100}%`,
 					height: "100%",
 				}}/>
-				<div style={{
-					position: "absolute",
-					bottom: "100%",
-					right: "50%",
-					color: "#ffff66",
-				}}>*</div>
-				<div style={{
-					position: "absolute",
-					bottom: "100%",
-					right: "0%",
-					color: "#ffff66",
-				}}>*</div>
 				{title}
 			</div>
 		</Wrapper>
 	)
 }
+
+				// <div style={{
+				// 	position: "absolute",
+				// 	bottom: "100%",
+				// 	right: "50%",
+				// 	color: "#ffff66",
+				// }}>*</div>
+				// <div style={{
+				// 	position: "absolute",
+				// 	bottom: "100%",
+				// 	right: "0%",
+				// 	color: "#ffff66",
+				// }}>*</div>

@@ -1,6 +1,6 @@
 export const width = 1920;
 export const height = 1080;
-export const fps = 60;
+export const fps = 30;
 
 export const dayDuration = 16;
 export const introDuration = 6;
