@@ -1,7 +1,7 @@
 import { Day1 } from "./Day1/Day1";
 import { Day2 } from "./Day2/Day2";
 import { Day3 } from "./Day3/Day3";
-// {}import { Day4 } from "./Day4/Day4";
+import { Day4 } from "./Day4/Day4";
 // import { Day5 } from "./Day5/Day5";
 // import { Day6 } from "./Day6/Day6";
 // import { Day7 } from "./Day7/Day7";
@@ -28,7 +28,7 @@ export const allDays = [
 	{Day: Day1, day: 1, fullDuration: 16 /* 80 */},
 	{Day: Day2, day: 2, fullDuration: 16 /* 100 */},
 	{Day: Day3, day: 3, fullDuration: 16},
-	// {Day: Day4, day: 4},
+	{Day: Day4, day: 4, fullDuration: 16},
 	// {Day: Day5, day: 5},
 	// {Day: Day6, day: 6},
 	// {Day: Day7, day: 7},

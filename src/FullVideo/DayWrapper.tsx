@@ -33,7 +33,7 @@ export const DayWrapper = ({day, title, dayDuration, children, style}: DayWrappe
 				</>
 			)}
 			{Array(dayDuration / 16).fill(null).map((_, i) => (
-				<Sequence from={fps * i * 16}>
+				<Sequence key={i} from={fps * i * 16}>
 					<Audio src={staticFile(`Day${day}.wav`)}/>
 				</Sequence>
 			))}
