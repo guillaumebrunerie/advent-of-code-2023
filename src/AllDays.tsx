@@ -2,8 +2,8 @@ import { Day1 } from "./Day1/Day1";
 import { Day2 } from "./Day2/Day2";
 import { Day3 } from "./Day3/Day3";
 import { Day4 } from "./Day4/Day4";
-// import { Day5 } from "./Day5/Day5";
-// import { Day6 } from "./Day6/Day6";
+import { Day5 } from "./Day5/Day5";
+import { Day6 } from "./Day6/Day6";
 // import { Day7 } from "./Day7/Day7";
 // import { Day8 } from "./Day8/Day8";
 // import { Day9 } from "./Day9/Day9";
@@ -29,25 +29,25 @@ export const allDays = [
 	{Day: Day2, day: 2, fullDuration: 16 /* 100 */},
 	{Day: Day3, day: 3, fullDuration: 16},
 	{Day: Day4, day: 4, fullDuration: 16},
-	// {Day: Day5, day: 5},
-	// {Day: Day6, day: 6},
-	// {Day: Day7, day: 7},
-	// {Day: Day8, day: 8},
-	// {Day: Day9, day: 9},
-	// {Day: Day10, day: 10},
-	// {Day: Day11, day: 11},
-	// {Day: Day12, day: 12},
-	// {Day: Day13, day: 13},
-	// {Day: Day14, day: 14},
-	// {Day: Day15, day: 15},
-	// {Day: Day16, day: 16},
-	// {Day: Day17, day: 17},
-	// {Day: Day18, day: 18},
-	// {Day: Day19, day: 19},
-	// {Day: Day20, day: 20},
-	// {Day: Day21, day: 21},
-	// {Day: Day22, day: 22},
-	// {Day: Day23, day: 23},
-	// {Day: Day24, day: 24},
-	// {Day: Day25, day: 25},
+	{Day: Day5, day: 5, fullDuration: 16},
+	{Day: Day6, day: 6, fullDuration: 16},
+	// {Day: Day7, day: 7, fullDuration: 16},
+	// {Day: Day8, day: 8, fullDuration: 16},
+	// {Day: Day9, day: 9, fullDuration: 16},
+	// {Day: Day10, day: 10, fullDuration: 16},
+	// {Day: Day11, day: 11, fullDuration: 16},
+	// {Day: Day12, day: 12, fullDuration: 16},
+	// {Day: Day13, day: 13, fullDuration: 16},
+	// {Day: Day14, day: 14, fullDuration: 16},
+	// {Day: Day15, day: 15, fullDuration: 16},
+	// {Day: Day16, day: 16, fullDuration: 16},
+	// {Day: Day17, day: 17, fullDuration: 16},
+	// {Day: Day18, day: 18, fullDuration: 16},
+	// {Day: Day19, day: 19, fullDuration: 16},
+	// {Day: Day20, day: 20, fullDuration: 16},
+	// {Day: Day21, day: 21, fullDuration: 16},
+	// {Day: Day22, day: 22, fullDuration: 16},
+	// {Day: Day23, day: 23, fullDuration: 16},
+	// {Day: Day24, day: 24, fullDuration: 16},
+	// {Day: Day25, day: 25, fullDuration: 16},
 ];

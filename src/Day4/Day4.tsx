@@ -162,14 +162,7 @@ export const Day4 = ({dayDuration}: {dayDuration: number}) => {
 		[0, 24],
 		clamp
 	));
-	// const processedCards = isPart1 ? Math.floor(time) * 24 + stepForPart1 : cards.length;
 	const processedCards = isPart1 ? Math.floor(interpolate(time, [0, dayDuration / 2], [0, cards.length])) : cards.length;
-	// const linePosition = interpolate(
-	// 	time % 1,
-	// 	[0.15, 0.85],
-	// 	[0, height - 110],
-	// 	clamp
-	// );
 	return (
 		<DayWrapper day={4} title="Scratchcards" dayDuration={dayDuration} style={{
 			fontSize: 32,
@@ -203,4 +196,3 @@ export const Day4 = ({dayDuration}: {dayDuration: number}) => {
 		</DayWrapper>
 	)
 };
-			// {false && <Line from={{x: 0, y: linePosition}} to={{x: width, y: linePosition}} color="white" width={2}/>}

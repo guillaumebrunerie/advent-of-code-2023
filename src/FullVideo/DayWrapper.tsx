@@ -16,6 +16,7 @@ type DayWrapperProps = {
 };
 
 const enableInterFlash = true;
+const enableSound = false;
 
 export const DayWrapper = ({day, title, dayDuration, children, style}: DayWrapperProps) => {
 	const frame = useCurrentFrame();
@@ -32,7 +33,7 @@ export const DayWrapper = ({day, title, dayDuration, children, style}: DayWrappe
 					<FinalFlash dayDuration={dayDuration} />
 				</>
 			)}
-			{Array(dayDuration / 16).fill(null).map((_, i) => (
+			{enableSound && Array(dayDuration / 16).fill(null).map((_, i) => (
 				<Sequence key={i} from={fps * i * 16}>
 					<Audio src={staticFile(`Day${day}.wav`)}/>
 				</Sequence>

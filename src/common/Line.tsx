@@ -1,9 +1,5 @@
 import { AbsoluteFill } from "remotion";
-
-export type Point = {
-	x: number;
-	y: number;
-};
+import { Point } from "./Point";
 
 export const Line = ({
 	from,
