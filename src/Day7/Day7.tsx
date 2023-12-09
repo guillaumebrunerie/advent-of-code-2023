@@ -111,9 +111,6 @@ const Hand = ({isPart1, hand, t}: {isPart1: boolean, hand: string[], t: number})
 				const colorFrom = (char === "J" && !isPart1) ? [255, 0, 0] : (isPart1 ? [170, 170, 170] : colors[`${count1}`]);
 				const colorTo = (false && char === "J" && !isPart1) ? [255, 0, 0] : colors[`${isPart1 ? count1 : count2}`];
 				const textShadow = (char === "J" && !isPart1) ? "0 0 7px #FFFFFF" : "";
-				if (count2 > 5) {
-					debugger;
-				}
 				const red = Math.floor(interpolate(t, [0, 1], [colorFrom[0], colorTo[0]]));
 				const green = Math.floor(interpolate(t, [0, 1], [colorFrom[1], colorTo[1]]));
 				const blue = Math.floor(interpolate(t, [0, 1], [colorFrom[2], colorTo[2]]));
