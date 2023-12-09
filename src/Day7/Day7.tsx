@@ -105,11 +105,12 @@ const Hand = ({isPart1, hand, t}: {isPart1: boolean, hand: string[], t: number})
 	return (
 		<span>
 			{hand.map((char, i) => {
+				const redC = [0xE6, 0x41, 0x01];
 				const count1 = hand.filter(c => c === char).length;
 				const joker = hand.filter(c => c !== "J").toSorted((c1, c2) => hand.filter(c => c === c2).length - hand.filter(c => c === c1).length)[0];
 				const count2 = hand.filter(c => c === char || (c === "J" && char === joker) || (c === joker && char === "J")).length;
-				const colorFrom = (char === "J" && !isPart1) ? [255, 0, 0] : (isPart1 ? [170, 170, 170] : colors[`${count1}`]);
-				const colorTo = (false && char === "J" && !isPart1) ? [255, 0, 0] : colors[`${isPart1 ? count1 : count2}`];
+				const colorFrom = (false && char === "J" && !isPart1) ? redC : (isPart1 ? [170, 170, 170] : colors[`${count1}`]);
+				const colorTo = (char === "J" && !isPart1) ? redC : colors[`${isPart1 ? count1 : count2}`];
 				const textShadow = (char === "J" && !isPart1) ? "0 0 7px #FFFFFF" : "";
 				const red = Math.floor(interpolate(t, [0, 1], [colorFrom[0], colorTo[0]]));
 				const green = Math.floor(interpolate(t, [0, 1], [colorFrom[1], colorTo[1]]));

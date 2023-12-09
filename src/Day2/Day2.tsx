@@ -5,6 +5,7 @@ import { clamp, fps, height, width } from "../constants";
 import { interpolate, random, useCurrentFrame } from "remotion";
 import { Dot } from "../common/Dot";
 import { poissonDiskSampling, poissonDiskSamplingFixedSize } from "../common/poissonDiskSampling";
+import { Day10 } from "../Day10/Day10";
 
 const solve = () => {
 	const parsed = raw.split("\n").map(line => {
@@ -148,9 +149,9 @@ const Showing = ({showing, dayData, i: j, x, y, t, seed}: {
 	makeCubes(showing.green, dayData.day, dayData.green, styles.green, showing.red);
 	makeCubes(showing.blue, dayData.day, dayData.blue, styles.blue, showing.red + showing.green);
 
-	const opacity = interpolate(localTime, [0, 0.05, 0.7], [0, 1, 0], clamp);
-	const ghostOpacity = interpolate(localTime, [0, 0.05, 0.9, 1], [0, 1, 1, 0], clamp);
-	const flashOpacity = interpolate(localTime, [0, 0.05, 0.9, 1], [0, 1, 1, 0], clamp);
+	const opacity = interpolate(localTime, [0, 0.1, 0.6, 0.7], [0, 1, 1, 0], clamp);
+	const ghostOpacity = interpolate(localTime, [0, 0.1, 0.9, 1], [0, 1, 1, 0], clamp);
+	const flashOpacity = interpolate(localTime, [0, 0.1, 0.9, 1], [0, 1, 1, 0], clamp);
 
 	return (
 		<div>

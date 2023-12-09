@@ -1,4 +1,4 @@
-import { useCurrentFrame } from "remotion";
+import { interpolate, useCurrentFrame } from "remotion";
 import { raw } from "./raw";
 import { fps, grey, height, white, width } from "../constants";
 import { DayWrapper } from "../FullVideo/DayWrapper";
@@ -66,7 +66,7 @@ const solve = () => {
 	const part2Steps = Object.keys(graph).filter(node => node.endsWith("A")).map(node => {
 		let i = 0;
 		const steps = [];
-		while (i < 500) {
+		while (i < 700) {
 			steps.push(node);
 			const dir = instructions[i % instructions.length];
 			node = dir === "L" ? graph[node].left : graph[node].right;
@@ -150,7 +150,7 @@ const solve = () => {
 		let nextNodes = [startNode];
 		let i = 0;
 		while (nextNodes.length > 0) {
-			const newNodes = [];
+			const newNodes: string[] = [];
 			let k = 0;
 			for (const node of nextNodes) {
 				graph[node].distance = i;
@@ -199,7 +199,7 @@ const centersPart2 = [{
 }];
 
 const radius = height / 5;
-const radiusDelta = radius * 0.4;
+const radiusDelta = radius * 0.3;
 const part1Factor = 2;
 
 const cycleIndex = (cycles: {
@@ -253,11 +253,11 @@ const positionNode = (cycles: {
 	if (node.endsWith("A")) {
 		return {
 			x: center.x,
-			y: center.y - 100,
+			y: center.y,
 		};
 	}
 
-	const angle = (graph[node].distance / cycles.left[cycleI].length) * 2 * Math.PI;
+	const angle = ((graph[node].distance - 1) / cycles.left[cycleI].length) * 2 * Math.PI;
 	return {
 		x: center.x + r * Math.cos(angle),
 		y: center.y + r * Math.sin(angle),
@@ -281,29 +281,46 @@ const positionNodes = (cycles: {
 	return result;
 };
 
+const getNonNull = (...ps: (number | null)[]) => {
+	for (const p of ps) {
+		if (p !== null) {
+			return p;
+		}
+	}
+	return null;
+}
+
 export const Day8 = ({dayDuration}: {dayDuration: number}) => {
 	const time = useCurrentFrame() / fps;
 	const isPart1 = time < dayDuration / 2;
-	const frame = isPart1 ? Math.floor(time * 30) : Math.floor((time - dayDuration / 2) * 60);
+	const frame = 120 + (isPart1 ? Math.floor(time * 30) : Math.floor((time - dayDuration / 2) * 60));
 	const {cycles, graph, part1Steps, part2Steps} = useMemo(solve, []);
 	const positions = useMemo(() => positionNodes(cycles, graph, isPart1), [cycles, graph, isPart1]);
 	return (
 		<DayWrapper day={8} title="Haunted Wasteland" dayDuration={dayDuration}>
-			{Object.entries(positions).map(([node, pos], i) => {
-				const isStart = node.endsWith("A");
-				const isEnd = node.endsWith("Z");
-				const isCurrent = isPart1 ? node === part1Steps[frame] : part2Steps.map(x => x[frame]).includes(node);
-				const r = (isStart || isEnd || isCurrent) ? 10 : 3;
-				const backgroundColor = isStart ? "green" : isEnd ? "red" : "white";
-				return <Dot key={i} c={pos} r={r} style={{backgroundColor}}/>
-			})}
 			{Object.entries(graph).map(([node, {left, right}], i) => {
 				return (
 					<Fragment key={i}>
-						{positions[node] && positions[left] && <Line from={positions[node]} to={positions[left]} color={white} width={2}/>}
-						{positions[node] && positions[right] && <Line from={positions[node]} to={positions[right]} color="#CCCC66" width={2}/>}
+						{positions[node] && positions[left] && <Line from={positions[node]} to={positions[left]} color="#FFFFFF" width={2}/>}
+						{positions[node] && positions[right] && <Line from={positions[node]} to={positions[right]} color="#00CC00" width={2}/>}
 					</Fragment>
 				)
+			})}
+			{Object.entries(positions).map(([node, pos], i) => {
+				const isStart = node.endsWith("A");
+				const isEnd = node.endsWith("Z");
+				const history = isPart1 ? 30 : 30;
+				const getDelta = (steps: string[]) => {
+					const delta = steps.slice(frame - history, frame).toReversed().indexOf(node);
+					if (delta === -1) {
+						return null;
+					}
+					return delta;
+				};
+				const delta = isPart1 ? getDelta(part1Steps) : getNonNull(...part2Steps.map(getDelta));
+				const r = (isStart || isEnd) ? 10 : delta ? interpolate(delta, [0, history], [15, 5]) : 5;
+				const backgroundColor = isStart ? "red" : isEnd ? "red" : "#FFFF66";
+				return <Dot key={i} c={pos} r={isPart1 ? r : r / 1.5} style={{backgroundColor}}/>
 			})}
 		</DayWrapper>
 	);
