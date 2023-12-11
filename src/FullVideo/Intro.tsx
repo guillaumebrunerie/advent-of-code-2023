@@ -56,7 +56,7 @@ export const Intro = () => {
 				</div>
 			</AbsoluteFill>
 			<Sequence from={2 * fps}>
-				<Audio src={staticFile("Intro.wav")}/>
+				{false && <Audio src={staticFile("Intro.wav")}/>}
 			</Sequence>
 			<FinalFlash dayDuration={introDuration}/>
 		</Wrapper>

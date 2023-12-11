@@ -27,8 +27,8 @@ export const Day6 = ({dayDuration}: {dayDuration: number}) => {
 	const convertX = (x: number) => 10 + (x / data.time) * (width - 20);
 	const convertY = (y: number) => height - (60 + (y / data.time / data.time * 4) * (height - 70));
 	const t = isPart1
-		? Math.floor(interpolate(time % 2, [0.15, 1.5], [0, data.time], clamp))
-		: Math.floor(interpolate(time % 8, [0.15, 6], [0, data.time], clamp));
+		? Math.floor(interpolate(time % 2, [0.15, 1.85], [0, data.time], clamp))
+		: Math.floor(interpolate(time % 8, [0.15, 7.85], [0, data.time], clamp));
 
 	return (
 		<DayWrapper day={6} title="Wait For It" dayDuration={dayDuration}>

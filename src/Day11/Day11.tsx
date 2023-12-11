@@ -1,5 +1,4 @@
-import { Easing, interpolate, useCurrentFrame } from "remotion";
-import { NotImplementedYet } from "../common/NotImplementedYet";
+import { interpolate, useCurrentFrame } from "remotion";
 import { Point } from "../common/Point";
 import { raw } from "./raw";
 import { clamp, fps, height, white, width } from "../constants";
@@ -7,7 +6,6 @@ import { useMemo } from "react";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 import { shuffle } from "../common/shuffle";
 import { Dot } from "../common/Dot";
-import { Line } from "../common/Line";
 import { Svg } from "../common/Svg";
 
 const solve = () => {
@@ -62,7 +60,7 @@ export const Day11 = ({dayDuration}: {dayDuration: number}) => {
 	const time = useCurrentFrame() / fps;
 	const isPart1 = time < dayDuration / 2;
 	const {galaxies, galaxyPairs, emptyRows, emptyColumns} = useMemo(solve, []);
-	const w = isPart1 ? interpolate(time, [0, 8], [0, 0.1]) : interpolate(time, [8, 15.85], [0.1, 0.999], clamp);
+	const w = isPart1 ? interpolate(time, [0.15, 7.85], [0, 0.05]) : interpolate(time, [8.15, 15.83], [0.05, 0.999], clamp);
 	const expansion = 20 * w / (1 - w);
 	const convertX = (x: number) => {
 		const newX = x + emptyColumns.filter(c => c < x).length * (expansion - 1);
@@ -75,7 +73,7 @@ export const Day11 = ({dayDuration}: {dayDuration: number}) => {
 		return interpolate(newY, [0, totalY], [20, height - 20], clamp);
 	};
 	const convert = (p: Point) => ({x: convertX(p.x), y: convertY(p.y)});
-	const index = Math.floor(time * 250);
+	const index = Math.max(0, Math.floor((time - 0.15) * 250));
 	return (
 		<DayWrapper day={11} title="Cosmic Expansion" dayDuration={dayDuration}>
 			{galaxies.map((g, i) => (

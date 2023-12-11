@@ -4,6 +4,8 @@ import { clamp, fps, height, width } from "../constants";
 import { interpolate, useCurrentFrame } from "remotion";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 import { Translate } from "../common/Translate";
+import { poissonDiskSampling } from "../common/poissonDiskSampling";
+import { shuffle } from "../common/shuffle";
 
 const combinations1 = ["5", "41", "32", "311", "221", "2111", "11111"];
 const cards1 = "AKQJT98765432".split("");
@@ -111,17 +113,18 @@ const Hand = ({isPart1, hand, t}: {isPart1: boolean, hand: string[], t: number})
 				const count2 = hand.filter(c => c === char || (c === "J" && char === joker) || (c === joker && char === "J")).length;
 				const colorFrom = (false && char === "J" && !isPart1) ? redC : (isPart1 ? [170, 170, 170] : colors[`${count1}`]);
 				const colorTo = (char === "J" && !isPart1) ? redC : colors[`${isPart1 ? count1 : count2}`];
-				const textShadow = (char === "J" && !isPart1) ? "0 0 7px #FFFFFF" : "";
 				const red = Math.floor(interpolate(t, [0, 1], [colorFrom[0], colorTo[0]]));
 				const green = Math.floor(interpolate(t, [0, 1], [colorFrom[1], colorTo[1]]));
 				const blue = Math.floor(interpolate(t, [0, 1], [colorFrom[2], colorTo[2]]));
 				const color = `rgb(${red}, ${green}, ${blue})`;
-				return <span key={i} style={{color// , textShadow
-				}}>{char}</span>
+				return <span key={i} style={{color}}>{char}</span>
 			})}
 		</span>
 	);
 };
+
+const points = shuffle(poissonDiskSampling(width / 2, height, 55.5, 26, "42"), "42");
+const pointsSorted = points.toSorted((p, q) => (Math.floor(p.x / 55.5) - Math.floor(q.x / 55.5)) || (p.y - q.y))
 
 export const Day7 = ({dayDuration}: {dayDuration: number}) => {
 	const time = useCurrentFrame() / fps;
@@ -134,8 +137,6 @@ export const Day7 = ({dayDuration}: {dayDuration: number}) => {
 	const from = isPart1 ? hands : sortedHands1.toReversed();
 	const to = isPart1 ? sortedHands1.toReversed() : sortedHands2.toReversed();
 
-	const opacity = interpolate(lt, [0.9, 0.95], [1, 0], clamp);
-
 	return (
 		<DayWrapper day={7} title="Camel Cards" dayDuration={dayDuration} style={{
 			fontSize: 30,
@@ -144,12 +145,23 @@ export const Day7 = ({dayDuration}: {dayDuration: number}) => {
 			{from.map((data, i) => {
 				const {hand} = data;
 				const j = to.indexOf(data);
-				const end = interpolate(j, [0, hands.length], [0.4, 0.7]);
-				const interval = [0.05, end];
-				const x = interpolate(lt, interval, [Math.floor(i / 20), Math.floor(j / 20)], clamp);
-				const y = interpolate(lt, interval, [i % 20, j % 20], clamp);
+				const end = interpolate(j, [0, hands.length], [0.55, 1 - 0.15 / 4]);
+				const interval = [0.15 / 4, end];
+				const fromPt = isPart1 ? {
+					x: points[i].x * 2,
+					y: points[i].y,
+				} : {
+					x: pointsSorted[i].x * 2,
+					y: pointsSorted[i].y,
+				};
+				const toPt = {
+					x: Math.floor(j / 20) * spacingX + 90,
+					y: j % 20 * spacingY + 15,
+				};
+				const x = interpolate(lt, interval, [fromPt.x, toPt.x], clamp);
+				const y = interpolate(lt, interval, [fromPt.y, toPt.y], clamp);
 				return (
-					<Translate key={i} dx={x * spacingX - 900} dy={y * spacingY} style={{opacity}}>
+					<Translate key={i} dx={x - 960} dy={y - 10}>
 						<Hand isPart1={isPart1} hand={hand} t={interpolate(lt, interval, [0, 1], clamp)}/>
 					</Translate>
 				);

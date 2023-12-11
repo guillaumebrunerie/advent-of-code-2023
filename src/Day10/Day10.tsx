@@ -213,20 +213,25 @@ export const Maze = ({maze, distances, index, size, center, isPart1}: {
 };
 
 const interpolation = (time: number, n2: number) => {
-	const t0 = 2;
-	const t1 = 4;
-	const t2 = 8;
+	const t0 = 2 - 0.15;
+	const t1 = 4 - 0.15;
+	const t2 = 8 - 0.15 * 2;
 	const n0 = 120;
 
-	if (time <= t0) {
-		return time * n0 / t0;
+	const t = time - 0.15;
+
+	if (t <= 0) {
+		return 0;
+	}
+	if (t <= t0) {
+		return t * n0 / t0;
 	}
 	const a = (n2 - t2 * n0 / t0 - (t2 - t1) * n0 / t0) / ((t1 - t0) ** 2 + (t2 - t1) * 2 * (t1 - t0))
-	if (time <= t1) {
-		return time * n0 / t0 + a * (time - t0) * (time - t0); // Derivative: n0 / t0 + 2 * a * (time - t0)
+	if (t <= t1) {
+		return t * n0 / t0 + a * (t - t0) * (t - t0); // Derivative: n0 / t0 + 2 * a * (t - t0)
 	}
-	if (time <= t2) {
-		return time * n0 / t0 + a * (t1 - t0) * (t1 - t0) + (time - t1) * (n0 / t0 + 2 * a * (t1 - t0));
+	if (t <= t2) {
+		return t * n0 / t0 + a * (t1 - t0) * (t1 - t0) + (t - t1) * (n0 / t0 + 2 * a * (t1 - t0));
 	}
 	return n2;
 }
@@ -254,7 +259,7 @@ export const Day10 = ({dayDuration}: {dayDuration: number}) => {
 	const convertX = (x: number) => (x - center.x) * factor + width / 2;
 	const convertY = (y: number) => (y - center.y) * factor + height / 2;
 
-	const insideIndex = Math.floor(interpolate(time, [8, 15], [0, maxInsideDistance], clamp));
+	const insideIndex = Math.floor(interpolate(time, [8.15, 15.85], [0, maxInsideDistance], clamp));
 
 	return (
 		<DayWrapper day={10} title="Pipe Maze" dayDuration={dayDuration}>

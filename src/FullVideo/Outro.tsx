@@ -42,7 +42,7 @@ export const Outro = () => {
 			>
 				Thank you for watching!
 			</AbsoluteFill>
-			<Audio src={staticFile("Outro.wav")}/>
+			{false && <Audio src={staticFile("Outro.wav")}/>}
 			<InitialFlash/>
 		</Wrapper>
 	);

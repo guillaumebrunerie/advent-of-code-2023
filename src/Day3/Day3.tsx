@@ -9,16 +9,6 @@ import { shuffle } from "../common/shuffle";
 // Symbols: *#-+@%&=/$
 
 type Highlight = {x: number, y: number, char: string}[];
-/*
-Part 1:
-- Start with numbers in white, symbols highlighted.
-- Go through numbers in a random order, turning them into either grey or highlighted
-
-Part 2:
-- Start with numbers in white, asterisks highlighted, other symbols grey
-- Go through the gears, displaying them on top
-
-*/
 
 const solve = (raw: string) => {
 	const parsed = raw.split("\n");
@@ -213,7 +203,7 @@ export const Day3 = ({dayDuration}: {dayDuration: number}) => {
 	const length = isPart1 ? parts.length : gears.length;
 	const partT = interpolate(
 		time % (dayDuration / 2),
-		[0.3, dayDuration / 2 - 0.3],
+		[0.15, dayDuration / 2 - 0.15],
 		[0, length],
 	);
 	return (

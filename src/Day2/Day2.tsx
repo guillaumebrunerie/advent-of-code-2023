@@ -2,10 +2,9 @@ import { CSSProperties, ReactNode, useMemo } from "react";
 import { raw } from "./raw";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 import { clamp, fps, height, width } from "../constants";
-import { interpolate, random, useCurrentFrame } from "remotion";
+import { Easing, interpolate, interpolateColors, random, useCurrentFrame } from "remotion";
 import { Dot } from "../common/Dot";
 import { poissonDiskSampling, poissonDiskSamplingFixedSize } from "../common/poissonDiskSampling";
-import { Day10 } from "../Day10/Day10";
 
 const solve = () => {
 	const parsed = raw.split("\n").map(line => {
@@ -60,27 +59,16 @@ const useCurrentTime = () => {
 	return useCurrentFrame() / fps;
 };
 
-const styles = {
-	red: {
-		border: "3px solid #e6410b",
-		backgroundColor: "#e6410b",
-		boxShadow: "0 0 4px #e6410b, 0 0 10px #e6410b",
-	},
-	green: {
-		border: "3px solid #00CC00",
-		backgroundColor: "#00CC00",
-		boxShadow: "0 0 4px #00CC00, 0 0 10px #00CC00",
-	},
-	blue: {
-		border: "3px solid #00c8ff",
-		backgroundColor: "#00c8ff",
-		boxShadow: "0 0 4px #00c8ff, 0 0 10px #00c8ff",
-	},
-	grey: {
-		border: "3px solid #444444",
-		backgroundColor: "#444444",
-		boxShadow: "0 0 4px #444444, 0 0 10px #444444",
-	},
+const style = (color: string, spread = 0) => ({
+	backgroundColor: color,
+	boxShadow: `0 0 4px ${spread}px ${color}, 0 0 10px ${spread}px ${color}`,
+});
+
+const colors = {
+	red: "#e6410b",
+	green: "#00CC00",
+	blue: "#00c8ff",
+	grey: "#333333",
 };
 
 // Alternate between two samplings, to avoid repeated squares at the same place
@@ -102,7 +90,7 @@ const Showing = ({showing, dayData, i: j, x, y, t, seed}: {
 	seed: string,
 }) => {
 	const time = useCurrentTime();
-	const localTime = time - t + 0.05;
+	const localTime = time - t;
 
 	const phase = random(`showing(${seed})`) * Math.PI * 2;
 	const amount = showing.red + showing.green + showing.blue;
@@ -116,50 +104,34 @@ const Showing = ({showing, dayData, i: j, x, y, t, seed}: {
 		return angleP - angleQ;
 	}), [x, y, amount, phase, j]);
 
-	if (localTime < -0.5 || localTime > 1.5) {
+	if (localTime < 0 || localTime >= 1) {
 		return null;
 	}
 
-	const normalCubes: ReactNode[] = [];
-	const ghostCubes: ReactNode[] = [];
-	const chosenCubes: ReactNode[] = [];
+	const cubes: ReactNode[] = [];
 	const makeCubes = (
 		amount: number,
-		day: 1 | 2,
 		colorData: number,
-		style: CSSProperties,
+		color: string,
 		offset: number,
 	) => {
+		const normalStyle = style(color);
+		const ghostStyle = style(
+			interpolateColors(localTime, [0.15, 0.6], [color, colors.grey]),
+		);
 		for (let i = 0; i < amount; i++) {
-			if (day === 1) {
-				normalCubes.push(<Dot c={points[i + offset]} r={8} borderRadius={0} style={style}/>);
-				if (amount > colorData) {
-					ghostCubes.push(<Dot c={points[i + offset]} r={8} borderRadius={0} style={styles.grey}/>);
-				}
+			if (dayData.day === 1) {
+				cubes.push(<Dot c={points[i + offset]} r={8} borderRadius={0} style={amount > colorData ? ghostStyle : normalStyle}/>);
 			} else if (dayData.day === 2) {
-				if (j === colorData) {
-					chosenCubes.push(<Dot c={points[i + offset]} r={8} borderRadius={0} style={style}/>);
-				} else {
-					normalCubes.push(<Dot c={points[i + offset]} r={8} borderRadius={0} style={style}/>);
-				}
+				cubes.push(<Dot c={points[i + offset]} r={8} borderRadius={0} style={j === colorData ? normalStyle : ghostStyle}/>);
 			}
 		}
 	};
-	makeCubes(showing.red, dayData.day, dayData.red, styles.red, 0);
-	makeCubes(showing.green, dayData.day, dayData.green, styles.green, showing.red);
-	makeCubes(showing.blue, dayData.day, dayData.blue, styles.blue, showing.red + showing.green);
+	makeCubes(showing.red, dayData.red, colors.red, 0);
+	makeCubes(showing.green, dayData.green, colors.green, showing.red);
+	makeCubes(showing.blue, dayData.blue, colors.blue, showing.red + showing.green);
 
-	const opacity = interpolate(localTime, [0, 0.1, 0.6, 0.7], [0, 1, 1, 0], clamp);
-	const ghostOpacity = interpolate(localTime, [0, 0.1, 0.9, 1], [0, 1, 1, 0], clamp);
-	const flashOpacity = interpolate(localTime, [0, 0.1, 0.9, 1], [0, 1, 1, 0], clamp);
-
-	return (
-		<div>
-			<div style={{opacity: ghostOpacity}}>{ghostCubes}</div>
-			<div style={{opacity}}>{normalCubes}</div>
-			<div style={{opacity: flashOpacity}}>{chosenCubes}</div>
-		</div>
-	)
+	return cubes;
 };
 
 const pickIndexIf = <T,>(array: T[], f: (t: T) => boolean, seed: string): number | null => {

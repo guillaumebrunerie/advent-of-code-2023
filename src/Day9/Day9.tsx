@@ -131,8 +131,8 @@ export const Day9 = ({dayDuration}: {dayDuration: number}) => {
 		[height - 60, 20],
 	), [functions, index, isPart1, points]);
 	const resolution = 100;
-	const iMax = isPart1 ? interpolate((time % 1), [0, 0.75], [0, resolution], clamp) : resolution;
-	const iMin = isPart1 ? 0 : interpolate((time % 1), [0, 0.75], [resolution, 0], clamp);
+	const iMax = isPart1 ? interpolate((time % 1), [0, 0.85], [0, resolution], clamp) : resolution;
+	const iMin = isPart1 ? 0 : interpolate((time % 1), [0, 0.85], [resolution, 0], clamp);
 	const background = useMemo((): ReactNode => data.map((points, index) => {
 		const resolution = 100;
 		const pts = Array(resolution).fill(true).map((_, i) => {

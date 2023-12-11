@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 import { Translate } from "../common/Translate";
 import { Rectangle } from "../common/Rectangle";
-import { Line } from "../common/Line";
 
 type CardT = {
 	winningNumbers: {number: number, isWinning: boolean}[],
@@ -72,23 +71,11 @@ const styles = {
 	winning: {
 		color: "#FFFFFF",
 		textShadow: "0 0 10px #ffffff",
-		// color,
-		// textShadow: `0 0 4px ${color}, 0 0 10px ${color}`,
-	},
-	losing: {
-		// color: "#FFFFFF",
-		// textShadow: "0 0 10px #ffffff",
-		// color: "#FFFFFF",
-		// textShadow: "0 0 10px #ffffff",
 	},
 	ownWinning: {
 		color,
 		textShadow: `0 0 4px ${color}, 0 0 10px ${color}`,
-		// textShadow: "0 0 10px #ffffff",
-		// color,
-		// textShadow: `0 0 4px ${color}, 0 0 10px ${color}`,
 	},
-	ownLosing: {},
 	unknown: {
 		color: "#666",
 	}
@@ -102,7 +89,6 @@ const styles2 = {
 	},
 	green1: {
 		backgroundColor: color,
-		// opacity: 0.5,
 		borderRadius: "3px 3px 0 0",
 	},
 	green: {
@@ -124,10 +110,10 @@ const Card = ({card, isHighlighted}: {card: CardT, isHighlighted: boolean}) => {
 	const {winningNumbers, ownNumbers} = card;
 	return (
 		<div>
-			{winningNumbers.map(({number, isWinning}, i) => (
+			{winningNumbers.map(({number}, i) => (
 				<Translate key={i} dx={firstSpacingX + i * spacingX - width} style={{
 					textAlign: "right",
-					...(isHighlighted) ? styles.winning : styles.losing,
+					...isHighlighted ? styles.winning : {},
 				}}>
 					{number}
 				</Translate>
@@ -135,7 +121,7 @@ const Card = ({card, isHighlighted}: {card: CardT, isHighlighted: boolean}) => {
 			{ownNumbers.map(({number, isWinning}, i) => (
 				<Translate key={i} dx={sideSpacingX + i * spacingX - width} style={{
 					textAlign: "right",
-					...isHighlighted ? (isWinning ? styles.ownWinning : styles.ownLosing) : styles.unknown,
+					...isHighlighted ? (isWinning ? styles.ownWinning : {}) : styles.unknown,
 				}}>
 					{number}
 				</Translate>
@@ -150,17 +136,17 @@ export const Day4 = ({dayDuration}: {dayDuration: number}) => {
 	const isPart2 = !isPart1;
 	const {cards, cardAmountsOverTime} = useMemo(solve, []);
 	const block = Math.floor(time);
-	const stepForPart2 = Math.floor(interpolate(
-		time,
-		[dayDuration / 2, dayDuration - 0.5],
-		[0, cardAmountsOverTime.length - 1],
-		clamp,
-	));
 	const stepForPart1 = Math.floor(interpolate(
 		time % 1,
 		[0.15, 0.85],
 		[0, 24],
 		clamp
+	));
+	const stepForPart2 = Math.floor(interpolate(
+		time,
+		[dayDuration / 2 + 0.15, dayDuration - 0.15],
+		[0, cardAmountsOverTime.length - 1],
+		clamp,
 	));
 	const processedCards = isPart1 ? Math.floor(interpolate(time, [0, dayDuration / 2], [0, cards.length])) : cards.length;
 	return (
