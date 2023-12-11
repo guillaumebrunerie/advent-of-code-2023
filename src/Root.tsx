@@ -10,6 +10,7 @@ import {
 	width,
 } from "./constants";
 import { z } from "zod";
+import { Test } from "./Test";
 
 export const RemotionRoot = () => {
 	return (
@@ -23,6 +24,14 @@ export const RemotionRoot = () => {
 						outroDuration) *
 					fps
 				}
+				fps={fps}
+				width={width}
+				height={height}
+			/>
+			<Composition
+				id="Test"
+				component={Test}
+				durationInFrames={fps}
 				fps={fps}
 				width={width}
 				height={height}
