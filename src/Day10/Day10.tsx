@@ -212,16 +212,36 @@ export const Maze = ({maze, distances, index, size, center, isPart1}: {
 	)
 };
 
+const interpolation = (time: number, n2: number) => {
+	const t0 = 2;
+	const t1 = 4;
+	const t2 = 8;
+	const n0 = 120;
+
+	if (time <= t0) {
+		return time * n0 / t0;
+	}
+	const a = (n2 - t2 * n0 / t0 - (t2 - t1) * n0 / t0) / ((t1 - t0) ** 2 + (t2 - t1) * 2 * (t1 - t0))
+	if (time <= t1) {
+		return time * n0 / t0 + a * (time - t0) * (time - t0); // Derivative: n0 / t0 + 2 * a * (time - t0)
+	}
+	if (time <= t2) {
+		return time * n0 / t0 + a * (t1 - t0) * (t1 - t0) + (time - t1) * (n0 / t0 + 2 * a * (t1 - t0));
+	}
+	return n2;
+}
+
 export const Day10 = ({dayDuration}: {dayDuration: number}) => {
 	const time = useCurrentFrame() / fps;
 	const isPart1 = time < dayDuration / 2;
 	const {maze, distances, maxDistance, insides, maxInsideDistance, positions1, positions2} = useMemo(solve, []);
-	const index = Math.floor(interpolate(
-		time,
-		[0, 2.5, 4, 8],
-		[0, 150, 1000, maxDistance - 1],
-		{...clamp},
-	));
+	const index = Math.floor(interpolation(time, maxDistance - 1))
+	// const index = Math.floor(interpolate(
+	// 	time,
+	// 	[0, 2.5, 4, 8],
+	// 	[0, 150, 1000, maxDistance - 1],
+	// 	{...clamp},
+	// ));
 	const pos1 = positions1[index];
 	const pos2 = positions2[index];
 
