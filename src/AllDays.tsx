@@ -9,7 +9,7 @@ import { Day8 } from "./Day8/Day8";
 import { Day9 } from "./Day9/Day9";
 import { Day10 } from "./Day10/Day10";
 import { Day11 } from "./Day11/Day11";
-// import { Day12 } from "./Day12/Day12";
+import { Day12 } from "./Day12/Day12";
 // import { Day13 } from "./Day13/Day13";
 // import { Day14 } from "./Day14/Day14";
 // import { Day15 } from "./Day15/Day15";
@@ -36,7 +36,7 @@ export const allDays = [
 	{Day: Day9, day: 9, fullDuration: 16},
 	{Day: Day10, day: 10, fullDuration: 16},
 	{Day: Day11, day: 11, fullDuration: 16},
-	// {Day: Day12, day: 12, fullDuration: 16},
+	{Day: Day12, day: 12, fullDuration: 16},
 	// {Day: Day13, day: 13, fullDuration: 16},
 	// {Day: Day14, day: 14, fullDuration: 16},
 	// {Day: Day15, day: 15, fullDuration: 16},
