@@ -15,27 +15,14 @@ import { Test } from "./Test";
 export const RemotionRoot = () => {
 	return (
 		<>
-			<Composition
-				id="FullVideo"
-				component={FullVideo}
-				durationInFrames={
-					(introDuration +
-						dayDuration * allDays.length +
-						outroDuration) *
-					fps
-				}
-				fps={fps}
-				width={width}
-				height={height}
-			/>
-			<Composition
+			{false && <Composition
 				id="Test"
 				component={Test}
 				durationInFrames={fps}
 				fps={fps}
 				width={width}
 				height={height}
-			/>
+			/>}
 			{allDays.map(({Day, day, fullDuration}, i) => (
 				<Composition
 					key={i}
@@ -55,6 +42,19 @@ export const RemotionRoot = () => {
 					height={height}
 				/>
 			))}
+			<Composition
+				id="FullVideo"
+				component={FullVideo}
+				durationInFrames={
+					(introDuration +
+						dayDuration * allDays.length +
+						outroDuration) *
+					fps
+				}
+				fps={fps}
+				width={width}
+				height={height}
+			/>
 		</>
 	);
 };

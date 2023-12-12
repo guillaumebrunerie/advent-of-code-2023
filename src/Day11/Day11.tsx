@@ -60,7 +60,7 @@ export const Day11 = ({dayDuration}: {dayDuration: number}) => {
 	const time = useCurrentFrame() / fps;
 	const isPart1 = time < dayDuration / 2;
 	const {galaxies, galaxyPairs, emptyRows, emptyColumns} = useMemo(solve, []);
-	const w = isPart1 ? interpolate(time, [0.15, 7.85], [0, 0.05]) : interpolate(time, [8.15, 15.83], [0.05, 0.999], clamp);
+	const w = isPart1 ? interpolate(time, [0.15, 7.85], [0, 0.05]) : interpolate(time, [8, 15.85], [0.05, 0.999], clamp);
 	const expansion = 20 * w / (1 - w);
 	const convertX = (x: number) => {
 		const newX = x + emptyColumns.filter(c => c < x).length * (expansion - 1);
