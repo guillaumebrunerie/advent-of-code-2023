@@ -1,4 +1,4 @@
-import { interpolate, useCurrentFrame } from "remotion";
+import { useCurrentFrame } from "remotion";
 import { Point } from "../common/Point";
 import { raw } from "./raw";
 import { fps, height, width } from "../constants";
@@ -73,36 +73,41 @@ const solve = () => {
 	return {patterns, mirrors, smudges};
 };
 
-const cellSize = 25;
+const cellSize = 15;
 
 const styles = {
 	faded: {background: "#666"},
+	fadedHighlighted: {background: "#333"},
 	highlighted: {
 		background: "#CCC",
-		boxShadow: "0 0 4px #CCC",
+		zIndex: 1,
 	},
 	highlighted2: {
 		background: "#AAA",
-		boxShadow: "0 0 4px #AAA",
+	},
+	fadedGreen: {
+		background: "#030",
 	},
 	green: {
 		background: "#080",
-		boxShadow: "0 0 4px #080",
+		zIndex: 1,
 	},
-	red: {
-		background: "#800",
+	smudgeH: {
+		background: "#080",
+		zIndex: 1,
+	},
+	smudgeF: {
+		background: "#080",
+		zIndex: 1,
 	},
 };
-const flashSpeed = 15;
 
-const Room = ({isPart1, delta, pattern, mirror, smudge, smudgeOpacity, smudgeMirrorOpacity}: {
+const Room = ({isPart1, time, pattern, mirror, smudge}: {
 	isPart1: boolean,
-	delta: number,
+	time: number,
 	pattern: string[][],
 	mirror: {type: "col" | "row", z: number},
 	smudge: {type: "col" | "row", z: number, smudge: Point},
-	smudgeOpacity: number,
-	smudgeMirrorOpacity: number,
 }) => {
 	const h = pattern.length;
 	const w = pattern[0].length;
@@ -111,40 +116,24 @@ const Room = ({isPart1, delta, pattern, mirror, smudge, smudgeOpacity, smudgeMir
 	const mirrorTo = mirror.type === "col" ? {x: v, y: h * cellSize} : {x: w * cellSize, y: v};
 	const vS = (smudge.z + 1) * cellSize;
 	const mirrorFromS = smudge.type === "col" ? {x: vS, y: 0} : {x: 0, y: vS};
-	const mirrorToS = smudge.type === "col" ? {x: vS, y: h * cellSize} : {x: w * cellSize, y: vS};
-	const mirrorDelay = (x: number, y: number, mirror: {type: "col" | "row", z: number}) => {
-		const dx = Math.abs(x - mirror.z - 0.5);
-		const dy = Math.abs(y - mirror.z - 0.5);
-		if (mirror.type === "col") {
-			if (dx <= Math.min(mirror.z + 1, w - mirror.z - 1)) {
-				return dx;
-			} else {
-				return Infinity;
-			}
-		}
-		if (dy <= Math.min(mirror.z + 1, h - mirror.z - 1)) {
-			return dy;
-		} else {
-			return Infinity;
-		}
-	};
-	const time = useCurrentFrame() / fps;
-	const rectangle = () => {
-		const dX = Math.min(Math.max(0, (time - delta) * flashSpeed), Math.min(mirror.z + 1, w - mirror.z - 1));
-		const dY = Math.min(Math.max(0, (time - delta) * flashSpeed), Math.min(mirror.z + 1, h - mirror.z - 1));
+	const mirrorToS = smudge.type === "col" ? {x: vS, y: h * cellSize} : {x: w * cellSize, y: vS};;
+	const rectangle = (t: number, mirror: {type: "col" | "row", z: number}) => {
+		const depth = Math.min(mirror.z + 1, (mirror.type === "col" ? w : h) - mirror.z - 1);
+		const flashSpeed = depth / (2 - 0.15*2);
+		const d = Math.min(Math.max(0, t * flashSpeed), depth);
 		if (mirror.type === "col") {
 			return {
-				x: mirror.z - dX + 1,
+				x: mirror.z - d + 1,
 				y: 0,
-				w: 2 * dX,
+				w: 2 * d,
 				h,
 			};
 		} else {
 			return {
 				x: 0,
-				y: mirror.z - dY + 1,
+				y: mirror.z - d + 1,
 				w,
-				h: 2 * dY,
+				h: 2 * d,
 			};
 		}
 	};
@@ -161,41 +150,59 @@ const Room = ({isPart1, delta, pattern, mirror, smudge, smudgeOpacity, smudgeMir
 		}
 		return {x, y, w, h};
 	};
+	const smudges = [
+		smudge.smudge,
+		{
+			x: smudge.type == "col" ? smudge.z * 2 - smudge.smudge.x + 1 : smudge.smudge.x,
+			y: smudge.type == "row" ? smudge.z * 2 - smudge.smudge.y + 1 : smudge.smudge.y,
+		},
+	];
 	return (
 		<Translate dx={-w * cellSize / 2} dy={-h * cellSize / 2}>
 			{pattern.map((line, y) => line.map((c, x) => {
-				let style = styles.faded;
-				// if (mirrorDelay(x, y, mirror) < (time - delta) * flashSpeed) {
-				// 	style = styles.highlighted;
-				// }
-				// if (!isPart1 && mirrorDelay(x, y, mirror) < Infinity) {
-				// 	style = styles.highlighted2;
-				// }
-				// if (!isPart1 && mirrorDelay(x, y, smudge) < (time - delta) * flashSpeed) {
-				// 	style = styles.green;
-				// }
-				const rH = intersect({x, y, w: 1, h: 1}, rectangle());
-				return (c === "#" &&
-					(
-						<>
-							<Rectangle
-								x={x * cellSize}
-								y={y * cellSize}
-								w={cellSize}
-								h={cellSize}
-								style={style}
-							/>
-							{rH && (
-								<Rectangle
-									x={rH.x * cellSize}
-									y={rH.y * cellSize}
-									w={rH.w * cellSize}
-									h={rH.h * cellSize}
-									style={styles.highlighted}
-								/>
-							)}
-						</>
-					)
+				return c === "#" && (
+					<Rectangle
+						x={x * cellSize - 0.5}
+						y={y * cellSize - 0.5}
+						w={cellSize + 1}
+						h={cellSize + 1}
+						style={styles.faded}
+					/>
+				);
+			}))}
+			{pattern.map((line, y) => line.map((c, x) => {
+				const rH = intersect({x, y, w: 1, h: 1}, rectangle(isPart1 ? time : Infinity, mirror));
+				return rH && (
+					<Rectangle
+						x={rH.x * cellSize - 0.5}
+						y={rH.y * cellSize - 0.5}
+						w={rH.w * cellSize + 1}
+						h={rH.h * cellSize + 1}
+						style={c === "#" ? styles.highlighted : styles.fadedHighlighted}
+					/>
+				);
+			}))}
+			{!isPart1 && smudges.map((smudge, i) => (
+				pattern[smudge.y][smudge.x] === "." && <Rectangle
+					key={i}
+					x={smudge.x * cellSize - 0.5}
+					y={smudge.y * cellSize - 0.5}
+					w={cellSize + 1}
+					h={cellSize + 1}
+					style={{...styles.green}}
+				/>
+			))}
+			{pattern.map((line, y) => line.map((c, x) => {
+				const rG = intersect({x, y, w: 1, h: 1}, rectangle(isPart1 ? 0 : time, smudge));
+				const isSmudge = smudges.some(s => s.x === x && s.y === y)
+				return rG && (
+					<Rectangle
+						x={rG.x * cellSize - 0.5}
+						y={rG.y * cellSize - 0.5}
+						w={rG.w * cellSize + 1}
+						h={rG.h * cellSize + 1}
+						style={isSmudge ? (c === "#" ? styles.smudgeH : styles.smudgeF) : (c === "#" ? styles.green : styles.fadedGreen)}
+					/>
 				);
 			}))}
 			<Line
@@ -203,21 +210,14 @@ const Room = ({isPart1, delta, pattern, mirror, smudge, smudgeOpacity, smudgeMir
 				to={mirrorTo}
 				width={3}
 				color="white"
-				style={{opacity: (isPart1 && time < delta) ? 0 : 1, boxShadow: "0 0 10px white"}}
-			/>
-			<Rectangle
-				x={smudge.smudge.x * cellSize}
-				y={smudge.smudge.y * cellSize}
-				w={cellSize}
-				h={cellSize}
-				style={{...styles.red, opacity: smudgeOpacity}}
+				style={{boxShadow: "0 0 10px white"}}
 			/>
 			<Line
 				from={mirrorFromS}
 				to={mirrorToS}
 				width={3}
 				color="#00CC00"
-				style={{opacity: smudgeMirrorOpacity}}
+				style={{opacity: isPart1 ? 0 : 1, boxShadow: "0 0 10px #00CC00"}}
 			/>
 			<Rectangle
 				x={0}
@@ -230,8 +230,8 @@ const Room = ({isPart1, delta, pattern, mirror, smudge, smudgeOpacity, smudgeMir
 	);
 };
 
-const n = 2;
-const m = 2;
+const n = 6;
+const m = 3;
 const spacingX = width / n;
 const spacingY = height / m;
 const initialX = (width - (n - 1) * spacingX) / 2;
@@ -242,26 +242,21 @@ export const Day13 = ({dayDuration}: {dayDuration: number}) => {
 	const isPart1 = time < dayDuration / 2;
 	const {patterns, mirrors, smudges} = useMemo(solve, []);
 	const d = 2;
-	const indexFrom = Math.floor(time / d) * n * m;
+	const indexFrom = Math.floor((time % (dayDuration/2)) / d) * n * m;
 	return (
 		<DayWrapper day={13} title="Point of Incidence" dayDuration={dayDuration}>
 			{patterns.map((pattern, i) => {
 				if (i < indexFrom || i >= indexFrom + n * m) {
 					return null;
 				}
-				const list = range(n * m);
-				const indexToShow = Math.floor(interpolate(time % d, [0, d], [0, n * m]));
-				const part2Opacity = list[i - indexFrom] <= indexToShow ? 1 : 0
 				return (
 					<Translate key={i} dx={initialX + (i % n) * spacingX} dy={initialY + Math.floor((i - indexFrom) / n) * spacingY}>
 						<Room
 							isPart1={isPart1}
-							delta={i / 2 + 0.05}
+							time={time % 2 - 0.15}
 							pattern={pattern}
 							mirror={mirrors[i]}
 							smudge={smudges[i]}
-							smudgeOpacity={isPart1 ? 0 : 1}
-							smudgeMirrorOpacity={isPart1 ? 0 : part2Opacity}
 						/>
 					</Translate>
 				)
