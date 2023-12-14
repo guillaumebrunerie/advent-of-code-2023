@@ -1,7 +1,7 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import { raw } from "./raw";
 import { clamp, fps, height, width } from "../constants";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 import { Translate } from "../common/Translate";
 import { Rectangle } from "../common/Rectangle";
@@ -68,16 +68,22 @@ const spacingY = 40;
 
 const color = "#00CC00";
 const styles = {
-	winning: {
+	highlighted: {
 		color: "#FFFFFF",
 		textShadow: "0 0 10px #ffffff",
+		textAlign: "right" as const,
 	},
-	ownWinning: {
+	base: {
+		textAlign: "right" as const,
+	},
+	green: {
 		color,
 		textShadow: `0 0 4px ${color}, 0 0 10px ${color}`,
+		textAlign: "right" as const,
 	},
-	unknown: {
+	faded: {
 		color: "#666",
+		textAlign: "right" as const,
 	}
 };
 
@@ -106,28 +112,27 @@ const styles2 = {
 	},
 };
 
-const Card = ({card, isHighlighted}: {card: CardT, isHighlighted: boolean}) => {
+const Card = memo(({card, isHighlighted}: {card: CardT, isHighlighted: boolean}) => {
 	const {winningNumbers, ownNumbers} = card;
 	return (
 		<div>
 			{winningNumbers.map(({number}, i) => (
-				<Translate key={i} dx={firstSpacingX + i * spacingX - width} style={{
-					textAlign: "right",
-					...isHighlighted ? styles.winning : {},
-				}}>
+				<Translate key={i} dx={firstSpacingX + i * spacingX - width} style={isHighlighted ? styles.highlighted : styles.base}>
 					{number}
 				</Translate>
 			))}
 			{ownNumbers.map(({number, isWinning}, i) => (
-				<Translate key={i} dx={sideSpacingX + i * spacingX - width} style={{
-					textAlign: "right",
-					...isHighlighted ? (isWinning ? styles.ownWinning : {}) : styles.unknown,
-				}}>
+				<Translate key={i} dx={sideSpacingX + i * spacingX - width} style={isHighlighted ? (isWinning ? styles.green : styles.base) : styles.faded}>
 					{number}
 				</Translate>
 			))}
 		</div>
 	)
+});
+
+const style = {
+	fontSize: 32,
+	fontWeight: 400,
 };
 
 export const Day4 = ({dayDuration}: {dayDuration: number}) => {
@@ -150,10 +155,7 @@ export const Day4 = ({dayDuration}: {dayDuration: number}) => {
 	));
 	const processedCards = isPart1 ? Math.floor(interpolate(time, [0, dayDuration / 2], [0, cards.length])) : cards.length;
 	return (
-		<DayWrapper day={4} title="Scratchcards" dayDuration={dayDuration} style={{
-			fontSize: 32,
-			fontWeight: 400,
-		}}>
+		<DayWrapper day={4} title="Scratchcards" dayDuration={dayDuration} style={style}>
 			{cards.slice(0, processedCards).map((card, i) => (
 				<Rectangle
 					key={i}

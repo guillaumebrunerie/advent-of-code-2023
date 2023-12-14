@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ReactNode, useMemo } from "react";
 import { AbsoluteFill } from "remotion";
 
 export const Translate = ({
@@ -12,12 +12,13 @@ export const Translate = ({
 	children: ReactNode,
 	style?: CSSProperties,
 }) => {
+	const newStyle = useMemo(() => ({
+		left: `${dx}px`,
+		top: `${dy}px`,
+		...style,
+	}), [dx, dy, style]);
 	return (
-		<AbsoluteFill style={{
-			left: `${dx}px`,
-			top: `${dy}px`,
-			...style,
-		}}>
+		<AbsoluteFill style={newStyle}>
 			{children}
 		</AbsoluteFill>
 	);

@@ -1,16 +1,19 @@
 import { AbsoluteFill } from "remotion";
 import { Point } from "./Point";
+import { CSSProperties } from "react";
 
 export const Line = ({
 	from,
 	to,
 	color,
 	width,
+	style,
 }: {
 	from: Point;
 	to: Point;
 	color: string;
 	width: number;
+	style?: CSSProperties;
 }) => {
 	const deltaX = to.x - from.x;
 	const deltaY = to.y - from.y;
@@ -25,6 +28,7 @@ export const Line = ({
 				left: `${(from.x + to.x) / 2}px`,
 				top: `${(from.y + to.y) / 2}px`,
 				transform: `translate(-50%, -50%) rotate(${angle}rad)`,
+				...style,
 			}}
 		/>
 	);
