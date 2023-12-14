@@ -2,14 +2,14 @@ import { CSSProperties } from "react";
 import { AbsoluteFill } from "remotion";
 
 export const Rectangle = ({
-	x,
-	y,
+	x = 0,
+	y = 0,
 	w,
 	h,
 	style,
 }: {
-	x: number,
-	y: number,
+	x?: number,
+	y?: number,
 	w: number,
 	h: number,
 	style?: CSSProperties,
