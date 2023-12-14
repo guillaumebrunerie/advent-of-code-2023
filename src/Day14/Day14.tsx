@@ -102,10 +102,10 @@ const solve = (cropRows = -1) => {
 	};
 
 	const cycle = () => {
-		tiltUp();
-		tiltLeft();
 		tiltDown();
 		tiltRight();
+		tiltUp();
+		tiltLeft();
 	};
 
 	const score = () => {
@@ -120,7 +120,7 @@ const solve = (cropRows = -1) => {
 		return total;
 	};
 
-	tiltUp();
+	tiltDown();
 	console.log(`Day 14, part 1: ${score()}`);
 
 	const toString = () => data.map(line => line.join("")).join("\n");
@@ -199,7 +199,7 @@ const RoundBlocks = ({roundBlocksFrom, roundBlocksTo, delta, reverseEasing}: {
 		}
 		return Math.max(zF - deltaPos(x), zT);
 	};
-	const arrivalTime = (from: Point, to: Point) => {
+	const arrivalDelta = (from: Point, to: Point) => {
 		if (from.x !== to.x) {
 			return Math.abs(from.x - to.x) / maxDistance;
 		}
@@ -209,10 +209,10 @@ const RoundBlocks = ({roundBlocksFrom, roundBlocksTo, delta, reverseEasing}: {
 	return roundBlocksFrom.map(({x, y}, i) => {
 		const newX = applyDeltaMax(x, roundBlocksTo[i].x, x);
 		const newY = applyDeltaMax(y, roundBlocksTo[i].y, x);
-		const t = arrivalTime({x, y}, roundBlocksTo[i]);
+		const d = arrivalDelta({x, y}, roundBlocksTo[i]);
 		return <Rectangle key={i} x={newX * cellSize} y={newY * cellSize} w={cellSize} h={cellSize} style={{
 			...styles.roundBlock,
-			opacity: interpolate(time, [reverseEasing(t, x), reverseEasing(t, x) + 0.15], [1, 0.5], clamp),
+			opacity: interpolate(time, [reverseEasing(d, x), reverseEasing(d, x) + 0.15], [1, 0.5], clamp),
 		}}/>
 	});
 };
