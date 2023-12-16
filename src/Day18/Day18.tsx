@@ -1,5 +1,22 @@
+import { useCurrentFrame } from "remotion";
+import { fps } from "../constants";
+import { DayWrapper } from "../FullVideo/DayWrapper";
+import { useMemo } from "react";
 import { NotImplementedYet } from "../common/NotImplementedYet";
 
-export const Day18 = () => {
-	return <NotImplementedYet day={18} />;
+const solve = () => {
+	
+}
+
+export const Day18 = ({dayDuration}: {dayDuration: number}) => {
+	const time = useCurrentFrame() / fps;
+	const isPart1 = time < dayDuration / 2;
+	const isPart2 = !isPart1;
+	const stuff = useMemo(solve, []);
+
+	return (
+		<DayWrapper day={18} title="TODO" dayDuration={dayDuration}>
+			<NotImplementedYet day={18} />
+		</DayWrapper>
+	);
 };

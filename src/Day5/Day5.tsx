@@ -140,6 +140,11 @@ export const Day5 = ({dayDuration}: {dayDuration: number}) => {
 					toC={{x: convertX(destination), y: convertY2(i+1) + curvatureX(destination)}}
 					to={{x: convertX(destination), y: convertY2(i+1)}}
 					dx={Math.round(convertX(length) - convertX(0))}
+					style={{
+						fill: "#00FF0088",
+						stroke: "none",
+						strokeWidth: "0",
+					}}
 				/>
 			))}
 			{allNumbers.map((numbers, j) => seeds.map((_, i) => (

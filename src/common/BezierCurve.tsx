@@ -1,5 +1,6 @@
 import { Point } from "./Point";
 import { height, white, width } from "../constants";
+import { CSSProperties } from "react";
 
 export const BezierCurve = ({
 	from,
@@ -31,19 +32,19 @@ export const ExtrudedBezierCurve = ({
 	toC,
 	to,
 	dx,
+	style,
 }: {
 	from: Point;
 	fromC: Point;
 	toC: Point;
 	to: Point;
 	dx: number;
+	style?: CSSProperties,
 }) => {
 	return (
 		<svg style={{
 			position: "absolute",
-			fill: "#00FF0088",
-			stroke: "none",
-			strokeWidth: "0",
+			...style,
 		}} viewBox={`0 0 ${width} ${height}`}>
 			<path d={`
 M ${from.x} ${from.y}
