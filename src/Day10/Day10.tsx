@@ -6,7 +6,6 @@ import { useMemo } from "react";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 import { Svg } from "../common/Svg";
 import { Dot } from "../common/Dot";
-import { Rectangle } from "../common/Rectangle";
 
 const solve = () => {
 	const maze = raw.split("\n").map(line => line.split(""));

@@ -8,3 +8,4 @@ import {Config} from '@remotion/cli/config';
 Config.setVideoImageFormat('jpeg');
 Config.setOverwriteOutput(true);
 Config.setVideoBitrate("2.5M");
+Config.setDelayRenderTimeoutInMilliseconds(120000);

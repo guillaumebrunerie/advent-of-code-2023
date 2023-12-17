@@ -12,20 +12,21 @@ type DayWrapperProps = {
 	title: string,
 	dayDuration: number,
 	children: ReactNode,
+	titleOpacity?: number,
 	style?: CSSProperties,
 };
 
 const enableInterFlash = true;
 const enableSound = false;
 
-export const DayWrapper = ({day, title, dayDuration, children, style}: DayWrapperProps) => {
+export const DayWrapper = ({day, title, dayDuration, children, style, titleOpacity}: DayWrapperProps) => {
 	const frame = useCurrentFrame();
 	const progress = frame / (fps * dayDuration);
 	return (
 		<Wrapper style={style}>
 			<Background />
 			{children}
-			<Title title={`Day ${day}: ${title}`} progress={progress}/>
+			<Title title={`Day ${day}: ${title}`} progress={progress} opacity={titleOpacity}/>
 			<MidFlash dayDuration={dayDuration}/>
 			{enableInterFlash && (
 				<>

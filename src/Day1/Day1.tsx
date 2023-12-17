@@ -39,7 +39,7 @@ const solve = () => {
 		const b = getLastDigit(line, 1);
 		result += a * 10 + b;
 	}
-	console.log(`Part 1: ${result}`);
+	console.log(`Day 1, part 1: ${result}`);
 
 	result = 0;
 
@@ -48,10 +48,8 @@ const solve = () => {
 		const b = getLastDigit(line, 2);
 		result += a * 10 + b;
 	}
-	console.log(`Part 2: ${result}`);
+	console.log(`Day 1, part 2: ${result}`);
 };
-
-solve();
 
 const data = [...raw.split("\n"), ...raw.split("\n")];
 

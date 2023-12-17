@@ -14,7 +14,7 @@ import { Day13 } from "./Day13/Day13";
 import { Day14 } from "./Day14/Day14";
 import { Day15 } from "./Day15/Day15";
 import { Day16 } from "./Day16/Day16";
-// import { Day17 } from "./Day17/Day17";
+import { Day17 } from "./Day17/Day17";
 // import { Day18 } from "./Day18/Day18";
 // import { Day19 } from "./Day19/Day19";
 // import { Day20 } from "./Day20/Day20";
@@ -41,7 +41,7 @@ export const allDays = [
 	{Day: Day14, day: 14, fullDuration: 16},
 	{Day: Day15, day: 15, fullDuration: 16},
 	{Day: Day16, day: 16, fullDuration: 16},
-	// {Day: Day17, day: 17, fullDuration: 16},
+	{Day: Day17, day: 17, fullDuration: 16},
 	// {Day: Day18, day: 18, fullDuration: 16},
 	// {Day: Day19, day: 19, fullDuration: 16},
 	// {Day: Day20, day: 20, fullDuration: 16},

@@ -1,6 +1,6 @@
 import { Wrapper } from "../common/Wrapper"
 
-export const Title = ({title, progress}: {title: string, progress: number}) => {
+export const Title = ({title, progress, opacity = 1}: {title: string, progress: number, opacity?: number}) => {
 	return (
 		<Wrapper>
 			<div style={{
@@ -13,6 +13,7 @@ export const Title = ({title, progress}: {title: string, progress: number}) => {
 				backgroundColor: "#10101a",
 				padding: "0 4px",
 				border: "2px solid #333340",
+				opacity,
 			}}>
 				<div style={{
 					position: "absolute",
@@ -27,17 +28,4 @@ export const Title = ({title, progress}: {title: string, progress: number}) => {
 			</div>
 		</Wrapper>
 	)
-}
-
-				// <div style={{
-				// 	position: "absolute",
-				// 	bottom: "100%",
-				// 	right: "50%",
-				// 	color: "#ffff66",
-				// }}>*</div>
-				// <div style={{
-				// 	position: "absolute",
-				// 	bottom: "100%",
-				// 	right: "0%",
-				// 	color: "#ffff66",
-				// }}>*</div>
+};
