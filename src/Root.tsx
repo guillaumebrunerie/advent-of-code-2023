@@ -11,6 +11,7 @@ import {
 } from "./constants";
 import { z } from "zod";
 import { Test } from "./Test";
+import { FullAudio } from "./Audio/FullAudio";
 
 export const RemotionRoot = () => {
 	return (
@@ -48,6 +49,19 @@ export const RemotionRoot = () => {
 				durationInFrames={
 					(introDuration +
 						dayDuration * allDays.length +
+						outroDuration) *
+					fps
+				}
+				fps={fps}
+				width={width}
+				height={height}
+			/>
+			<Composition
+				id="FullAudio"
+				component={FullAudio}
+				durationInFrames={
+					(introDuration +
+						dayDuration * 1 +
 						outroDuration) *
 					fps
 				}

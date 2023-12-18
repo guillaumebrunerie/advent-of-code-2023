@@ -128,7 +128,7 @@ const InputData = ({isPart1, input, combinations, combinationAt}: {
 						<span style={{
 							position: "absolute",
 							color: c === "#" ? "#00CC00" : "#FFFFFF",
-							textShadow: c === "#" ? `0 0 4px #00CC00` :  `0 0 4px #FFFFFF`,
+							textShadow: c === "#" ? `0 0 1px #00CC00` :  `0 0 4px #FFFFFF`,
 						}}>{c === "?" ? " " : c === "." ? "·" : c}</span>
 					</Translate>
 				);
