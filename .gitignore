@@ -6,3 +6,7 @@ raw.tsx
 
 # Ignore the output video from Git but not videos you import into src/.
 out
+
+public/FullVideo.mp4
+src/Day20/*.txt
+src/Day20/*.png
