@@ -53,7 +53,7 @@ export const Outro = () => {
 					opacity,
 				}}
 			>
-	(days {allDays.length + 1} to 25 are coming soon)
+				(day 25 is coming soon)
 			</AbsoluteFill>
 			{false && <Audio src={staticFile("Outro.wav")}/>}
 			<InitialFlash/>

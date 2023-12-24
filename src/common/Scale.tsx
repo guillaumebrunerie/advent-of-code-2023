@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AbsoluteFill } from "remotion";
 
 export const Scale = ({
 	sx = 1,
@@ -10,8 +11,8 @@ export const Scale = ({
 	children: ReactNode;
 }) => {
 	return (
-		<div style={{ transform: `scale(${sx},${sy})` }}>
+		<AbsoluteFill style={{ transform: `scale(${sx},${sy})` }}>
 			{children}
-		</div>
+		</AbsoluteFill>
 	);
 };

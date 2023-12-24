@@ -18,10 +18,10 @@ import { Day17 } from "./Day17/Day17";
 import { Day18 } from "./Day18/Day18";
 import { Day19 } from "./Day19/Day19";
 import { Day20 } from "./Day20/Day20";
-// import { Day21 } from "./Day21/Day21";
-// import { Day22 } from "./Day22/Day22";
-// import { Day23 } from "./Day23/Day23";
-// import { Day24 } from "./Day24/Day24";
+import { Day21 } from "./Day21/Day21";
+import { Day22 } from "./Day22/Day22";
+import { Day23 } from "./Day23/Day23";
+import { Day24 } from "./Day24/Day24";
 // import { Day25 } from "./Day25/Day25";
 
 export const allDays = [
@@ -45,9 +45,9 @@ export const allDays = [
 	{Day: Day18, day: 18, fullDuration: 16},
 	{Day: Day19, day: 19, fullDuration: 16},
 	{Day: Day20, day: 20, fullDuration: 16},
-	// {Day: Day21, day: 21, fullDuration: 16},
-	// {Day: Day22, day: 22, fullDuration: 16},
-	// {Day: Day23, day: 23, fullDuration: 16},
-	// {Day: Day24, day: 24, fullDuration: 16},
+	{Day: Day21, day: 21, fullDuration: 16},
+	{Day: Day22, day: 22, fullDuration: 16},
+	{Day: Day23, day: 23, fullDuration: 16},
+	{Day: Day24, day: 24, fullDuration: 16},
 	// {Day: Day25, day: 25, fullDuration: 16},
 ];

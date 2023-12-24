@@ -23,4 +23,4 @@ import { loadFont } from "@remotion/google-fonts/SourceCodePro";
 export const { fontFamily } = loadFont();
 
 // import "./style.css";
-// export const fontFamily = "Source Code Pro";
+// export const fontFamily = "monospace";

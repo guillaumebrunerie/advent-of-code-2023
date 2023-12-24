@@ -12,19 +12,23 @@ import {
 import { z } from "zod";
 import { Test } from "./Test";
 import { FullAudio } from "./Audio/FullAudio";
+import { Day21Helper } from "./Day21/Day21";
+import { Day24 } from "./Day24/Day24";
 
 export const RemotionRoot = () => {
 	return (
 		<>
-			{false && <Composition
-				id="Test"
-				component={Test}
-				durationInFrames={fps}
-				fps={fps}
-				width={width}
-				height={height}
-			/>}
-			{allDays.map(({Day, day, fullDuration}, i) => (
+			{false && (
+				<Composition
+					id="Test"
+					component={Test}
+					durationInFrames={fps}
+					fps={fps}
+					width={width}
+					height={height}
+				/>
+			)}
+			{allDays.map(({ Day, day, fullDuration }, i) => (
 				<Composition
 					key={i}
 					id={`Day${day}`}
@@ -35,14 +39,53 @@ export const RemotionRoot = () => {
 					defaultProps={{
 						dayDuration: fullDuration,
 					}}
-					calculateMetadata={({props}) => {
-						return {durationInFrames: props.dayDuration * fps, props};
+					calculateMetadata={({ props }) => {
+						return {
+							durationInFrames: props.dayDuration * fps,
+							props,
+						};
 					}}
 					fps={fps}
 					width={width}
 					height={height}
 				/>
 			))}
+			<Composition
+				id={`Day24WithProps`}
+				component={Day24}
+				schema={z.object({
+					dayDuration: z.number(),
+					alpha: z.number(),
+					theta: z.number(),
+				})}
+				defaultProps={{
+					dayDuration: 16,
+					alpha: 0,
+					theta: 0,
+				}}
+				calculateMetadata={({ props }) => {
+					return { durationInFrames: props.dayDuration * fps, props };
+				}}
+				fps={fps}
+				width={width}
+				height={height}
+			/>
+			<Composition
+				id={`Day21Helper`}
+				component={Day21Helper}
+				schema={z.object({
+					epsX: z.number(),
+					epsY: z.number(),
+					single: z.optional(z.boolean()),
+				})}
+				defaultProps={{ epsX: 0, epsY: -1 }}
+				calculateMetadata={({ props }) => {
+					return { durationInFrames: 16 * fps, props };
+				}}
+				fps={fps}
+				width={131 * 8}
+				height={131 * 8}
+			/>
 			<Composition
 				id="FullVideo"
 				component={FullVideo}
@@ -60,10 +103,7 @@ export const RemotionRoot = () => {
 				id="FullAudio"
 				component={FullAudio}
 				durationInFrames={
-					(introDuration +
-						dayDuration * 1 +
-						outroDuration) *
-					fps
+					(introDuration + dayDuration * 1 + outroDuration) * fps
 				}
 				fps={fps}
 				width={width}
