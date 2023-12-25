@@ -1,4 +1,4 @@
-import { Easing, interpolate, random, useCurrentFrame } from "remotion";
+import { Easing, interpolate, interpolateColors, random, useCurrentFrame } from "remotion";
 import { fps, height, white, width, clamp } from "../constants";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 import { useMemo } from "react";
@@ -174,13 +174,19 @@ export const Day25 = ({dayDuration}: {dayDuration: number}) => {
 						if (inNode.localeCompare(outNode) <= 0) {
 							return null;
 						}
-						if ((inNode + outNode) in cutNodes && time >= cutNodes[inNode + outNode]) {
+						const key = inNode + outNode;
+						if (key in cutNodes && time >= cutNodes[key]) {
 							return null;
 						}
 						const from = positionNode(inNode);
 						const to = positionNode(outNode);
+						const strokeWidth = interpolate(time % 8, [0.15, 4], [0.5, key in cutNodes ? 1 : 0.5], {...clamp, easing: Easing.inOut(Easing.ease)});
+						const stroke = interpolateColors(time % 8, [0.15, 4], [white, key in cutNodes ? "#FFF" : white]);
 						return (
-							<path key={inNode + outNode} d={`M ${from.x} ${from.y} L ${to.x} ${to.y}`}/>
+							<path key={key} d={`M ${from.x} ${from.y} L ${to.x} ${to.y}`} style={{
+								strokeWidth,
+								stroke,
+							}}/>
 						);
 					}
 					))}

@@ -46,7 +46,7 @@ export const Intro = () => {
 					color: "#CCCCCC",
 					opacity: opacity2,
 				}}>
-	A visualization by{" "}
+	Visualizations by{" "}
 					<span style={{
 						color: "#FFFFFF",
 						textShadow: "0 0 10px #ffffff",
