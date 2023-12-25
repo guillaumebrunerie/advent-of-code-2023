@@ -10,14 +10,13 @@ import { clamp } from "../constants";
 import { Wrapper } from "../common/Wrapper";
 import { InitialFlash } from "../common/Flashes";
 import { Background } from "../common/Background";
-import { allDays } from "../AllDays";
 
 export const Outro = () => {
 	const { fps } = useVideoConfig();
 	const frame = useCurrentFrame();
 
 	const fadeOut = interpolate(
-		frame / fps,
+		frame / fps % 8,
 		[5.5, 6],
 		[1, 0],
 		clamp,
@@ -43,18 +42,20 @@ export const Outro = () => {
 			>
 				Thank you for watching!
 			</AbsoluteFill>
-			<AbsoluteFill
-				style={{
-					color: "#CCC",
-					fontSize: 60,
-					fontWeight: 300,
-					textAlign: "center",
-					top: "650px",
-					opacity,
-				}}
-			>
-				(day 25 is coming soon)
-			</AbsoluteFill>
+			{false && (
+				<AbsoluteFill
+					style={{
+						color: "#CCC",
+						fontSize: 60,
+						fontWeight: 300,
+						textAlign: "center",
+						top: "650px",
+						opacity,
+					}}
+				>
+	(day 25 is coming soon)
+				</AbsoluteFill>
+			)}
 			{false && <Audio src={staticFile("Outro.wav")}/>}
 			<InitialFlash/>
 		</Wrapper>

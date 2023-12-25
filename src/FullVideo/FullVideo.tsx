@@ -20,12 +20,14 @@ export const FullVideo = () => {
 					<Day dayDuration={dayDuration}/>
 				</Sequence>
 			))}
-			<Sequence
-				from={(introDuration + allDays.length * dayDuration) * fps}
-				durationInFrames={outroDuration * fps}
-			>
-				<Outro />
-			</Sequence>
+			{false && (
+				<Sequence
+					from={(introDuration + allDays.length * dayDuration) * fps}
+					durationInFrames={outroDuration * fps}
+				>
+					<Outro />
+				</Sequence>
+			)}
 		</>
 	);
 };
