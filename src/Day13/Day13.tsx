@@ -76,27 +76,21 @@ const solve = () => {
 const cellSize = 15;
 
 const styles = {
-	faded: {background: "#666"},
-	fadedHighlighted: {background: "#333"},
-	highlighted: {
+	wall: {
+		background: "#666",
+		zIndex: 1,
+	},
+	emptyHighlighted: {
+		background: "#333",
+	},
+	wallHighlighted: {
 		background: "#CCC",
 		zIndex: 1,
 	},
-	highlighted2: {
-		background: "#AAA",
+	emptyGreen: {
+		background: "#040",
 	},
-	fadedGreen: {
-		background: "#030",
-	},
-	green: {
-		background: "#080",
-		zIndex: 1,
-	},
-	smudgeH: {
-		background: "#080",
-		zIndex: 1,
-	},
-	smudgeF: {
+	wallGreen: {
 		background: "#080",
 		zIndex: 1,
 	},
@@ -166,7 +160,7 @@ const Room = ({isPart1, time, pattern, mirror, smudge}: {
 						y={y * cellSize - 0.5}
 						w={cellSize + 1}
 						h={cellSize + 1}
-						style={styles.faded}
+						style={styles.wall}
 					/>
 				);
 			}))}
@@ -178,18 +172,18 @@ const Room = ({isPart1, time, pattern, mirror, smudge}: {
 						y={rH.y * cellSize - 0.5}
 						w={rH.w * cellSize + 1}
 						h={rH.h * cellSize + 1}
-						style={c === "#" ? styles.highlighted : styles.fadedHighlighted}
+						style={c === "#" ? styles.wallHighlighted : styles.emptyHighlighted}
 					/>
 				);
 			}))}
 			{!isPart1 && smudges.map((smudge, i) => (
-				pattern[smudge.y][smudge.x] === "." && <Rectangle
+				<Rectangle
 					key={i}
 					x={smudge.x * cellSize - 0.5}
 					y={smudge.y * cellSize - 0.5}
 					w={cellSize + 1}
 					h={cellSize + 1}
-					style={{...styles.green}}
+					style={{...pattern[smudge.y][smudge.x] === "#" ? styles.wallGreen : styles.emptyGreen}}
 				/>
 			))}
 			{pattern.map((line, y) => line.map((c, x) => {
@@ -201,7 +195,7 @@ const Room = ({isPart1, time, pattern, mirror, smudge}: {
 						y={rG.y * cellSize - 0.5}
 						w={rG.w * cellSize + 1}
 						h={rG.h * cellSize + 1}
-						style={isSmudge ? (c === "#" ? styles.smudgeH : styles.smudgeF) : (c === "#" ? styles.green : styles.fadedGreen)}
+						style={isSmudge ? styles.wallGreen : (c === "#" ? styles.wallGreen : styles.emptyGreen)}
 					/>
 				);
 			}))}

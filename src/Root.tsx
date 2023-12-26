@@ -14,6 +14,8 @@ import { Test } from "./Test";
 import { FullAudio } from "./Audio/FullAudio";
 import { Day21Helper } from "./Day21/Day21";
 import { Day24 } from "./Day24/Day24";
+import { Day22 } from "./Day22/Day22";
+import { Intro } from "./FullVideo/Intro";
 
 export const RemotionRoot = () => {
 	return (
@@ -28,6 +30,14 @@ export const RemotionRoot = () => {
 					height={height}
 				/>
 			)}
+			<Composition
+				id="Intro"
+				component={Intro}
+				durationInFrames={introDuration * fps}
+				fps={fps}
+				width={width}
+				height={height}
+			/>
 			{allDays.map(({ Day, day, fullDuration }, i) => (
 				<Composition
 					key={i}
@@ -50,6 +60,26 @@ export const RemotionRoot = () => {
 					height={height}
 				/>
 			))}
+			<Composition
+				id={`Day22WithProps`}
+				component={Day22}
+				schema={z.object({
+					dayDuration: z.number(),
+					from: z.number(),
+					to: z.number(),
+				})}
+				defaultProps={{
+					dayDuration: 16,
+					from: 100,
+					to: 150,
+				}}
+				calculateMetadata={({ props }) => {
+					return { durationInFrames: props.dayDuration * fps, props };
+				}}
+				fps={fps}
+				width={width}
+				height={height}
+			/>
 			<Composition
 				id={`Day24WithProps`}
 				component={Day24}
@@ -91,8 +121,7 @@ export const RemotionRoot = () => {
 				component={FullVideo}
 				durationInFrames={
 					(introDuration +
-						dayDuration * allDays.length +
-						outroDuration) *
+						dayDuration * allDays.length) *
 					fps
 				}
 				fps={fps}
@@ -103,7 +132,7 @@ export const RemotionRoot = () => {
 				id="FullAudio"
 				component={FullAudio}
 				durationInFrames={
-					(introDuration + dayDuration * 1 + outroDuration) * fps
+					(introDuration + dayDuration * 1) * fps
 				}
 				fps={fps}
 				width={width}

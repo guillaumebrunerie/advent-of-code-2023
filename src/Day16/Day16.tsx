@@ -117,7 +117,7 @@ const solve = () => {
 	return {room, part1, part2};
 };
 
-const cellSize = 9.5;
+const cellSize = 9;
 
 const line = (from: Point, to: Point, scale = 1) => `M ${from.x * scale} ${from.y * scale} L ${to.x * scale} ${to.y * scale} `;
 

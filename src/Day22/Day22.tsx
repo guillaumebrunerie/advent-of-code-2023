@@ -1,8 +1,7 @@
 import { Easing, interpolate, interpolateColors, useCurrentFrame } from "remotion";
 import { clamp, fps, height, width } from "../constants";
 import { DayWrapper } from "../FullVideo/DayWrapper";
-import { Fragment, useMemo } from "react";
-import { NotImplementedYet } from "../common/NotImplementedYet";
+import { useMemo } from "react";
 import { raw } from "./raw";
 import { Svg } from "../common/Svg";
 import { translatePath } from "@remotion/paths";
@@ -23,7 +22,7 @@ const solve = () => {
 		const to = b.split(",").map(Number);
 		return {from, to, id} as Brick;
 	});
-	bricks.sort((a, b) => Math.min(a.from[2], a.to[2]) - Math.min(b.from[2], b.to[2]));
+	bricks.sort((a, b) => zMin(a) - zMin(b));
 	const originalBricks = structuredClone(bricks);
 
 	const doGravity = (bricks: Brick[]) => {
@@ -91,7 +90,7 @@ const solve = () => {
 				brick.to[2]--;
 			}
 		});
-		bricks.sort((a, b) => Math.min(a.from[2], a.to[2]) - Math.min(b.from[2], b.to[2]));
+		// bricks.sort((a, b) => Math.min(a.from[2], a.to[2]) - Math.min(b.from[2], b.to[2]));
 		return bricks;
 	};
 	let currentBricks = originalBricks
@@ -105,18 +104,12 @@ const solve = () => {
 		return [cube.id, distance];
 	}));
 
-	const initialBricksForPart2: Brick[] = [9, 14, 20, 26, 30, 34, 38, 42].map((z, i) => bricks.find(b => (
-		zMin(b) === z && (i % 2 === 1 ? xMin(b) <= 0 : yMin(b) <= 0) && !isDisintegrable(b)
-	)) || bricks.find(b => (
-		zMin(b) === z && (i % 2 === 1 ? xMin(b) <= 1 : yMin(b) <= 1) && !isDisintegrable(b)
-	)) || bricks.find(b => (
-		zMin(b) === z && (i % 2 === 1 ? xMin(b) <= 2 : yMin(b) <= 2) && !isDisintegrable(b)
-	)));
+	const initialBricksForPart2 = [77, 101, 146, 175, 247, 341, 401, 424].map(i => bricks[i]);
 
-	const bricksForPart2 = initialBricksForPart2.map(brick => {
+	const bricksForPart2 =  initialBricksForPart2.map(brick => {
 		const newBricks: Brick[] = structuredClone(bricks.filter(b => b.id !== brick.id));
-		return doGravity(newBricks);
-	})
+		return [brick, ...doGravity(newBricks)];
+	});
 
 	return {bricks, history, distances, isDisintegrable, bricksForPart2};
 };
@@ -161,20 +154,6 @@ const UnitCube = ({cube, part2Highlight}: {cube: Cube, part2Highlight: number}) 
 		</>
 	)
 };
-
-// const Brick = ({brick}: {brick: Brick}) => {
-// 	const u = width / 2 + (xMin(brick) - yMin(brick)) * dx;
-// 	const v = height + w * 8 - (xMin(brick) + yMin(brick)) * dy - zMax(brick) * w;
-// 	const a = w * (zMax(brick) - zMin(brick) + 1);
-// 	const b = 
-// 	return (
-// 		<>
-// 			<path d={translatePath(`M 0 0 v ${w} l ${dx} ${-dy} v ${-w} z`, u, v)} style={getStyle("right", cube.moving)}/>
-// 			<path d={translatePath(`M 0 0 v ${w} l ${-dx} ${-dy} v ${-w} z`, u, v)} style={getStyle("left", cube.moving)}/>
-// 			<path d={translatePath(`M 0 0 l ${-dx} ${-dy} l ${dx} ${-dy} l ${dx} ${dy} z`, u, v)} style={getStyle("top", cube.moving)}/>
-// 		</>
-// 	)
-// };
 
 const range = (from: number, to: number): number[] => {
 	if (from > to) {
@@ -223,7 +202,7 @@ const brickToUnitCubes = (brick: Brick, disintegrable: boolean): Cube[] => {
 
 const compareCubes = (cube1: Cube, cube2: Cube) => ((cube2.x + cube2.y) - (cube1.x + cube1.y)) || (cube1.z - cube2.z);
 
-export const Day22 = ({dayDuration}: {dayDuration: number}) => {
+export const Day22 = ({dayDuration, from, to}: {dayDuration: number, from: number, to: number}) => {
 	const time = useCurrentFrame() / fps;
 	const isPart1 = time < dayDuration / 2;
 	const isPart2 = !isPart1;
@@ -252,10 +231,15 @@ export const Day22 = ({dayDuration}: {dayDuration: number}) => {
 						return null;
 					}
 					const part2Index = isPart2 ? bricksForPart2[index2].findIndex(b => `${b.id}` === cube.id.split("-")[0]) : -1;
-					const part2Highlight = isPart2 && part2Index !== -1 ? (time % 1 > part2Index / (bricksForPart2[index2].length + 1) ? 1 : 0) : 0;
+					const step = isPart2 && 0.5 / bricksForPart2[index2].length; // >= 10 ? 0.01 : 0.1
+					const part2Highlight = isPart2 && part2Index !== -1 ? (time % 1 > part2Index * step ? 1 : 0) : 0;
+					// const bricksToHighlight = [...range(from, to), ].map(i => bricks[i]);
+					// const part2Highlight = bricksToHighlight.some(b => `${b.id}` === cube.id.split("-")[0]) ? 1 : 0;
 					return <UnitCube key={i} cube={cube} part2Highlight={part2Highlight}/>
 				})}
 			</Svg>
 		</DayWrapper>
 	);
 };
+
+// 98, 101, 146, 178, 

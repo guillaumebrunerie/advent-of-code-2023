@@ -1,7 +1,7 @@
 import { Easing, interpolate, interpolateColors, random, useCurrentFrame } from "remotion";
 import { fps, height, white, width, clamp } from "../constants";
 import { DayWrapper } from "../FullVideo/DayWrapper";
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { raw, rawPreProcessed } from "./raw";
 import { poissonDiskSampling } from "../common/poissonDiskSampling";
 import { Dot } from "../common/Dot";
@@ -11,7 +11,6 @@ import { Outro } from "../FullVideo/Outro";
 import { Line } from "../common/Line";
 import { Translate } from "../common/Translate";
 import { Point } from "../common/Point";
-import { defaultArg } from "tone";
 
 type Graph = {[key: string]: string[]};
 
@@ -72,7 +71,7 @@ const distribution2 = shuffle(poissonDiskSampling(width / 2, width / 2, 26.8, 10
 const distribution3 = shuffle(poissonDiskSampling(width / 2, width / 2, 27.35, 10, "dist3"), "xxx");
 
 const delta = 80;
-const specialPositions = {
+const specialPositions: {[key: string]: Point | undefined} = {
 	rpd: {x: width / 2 + delta, y: height / 4},
 	vps: {x: width / 2 + delta, y: height / 2},
 	dgc: {x: width / 2 + delta, y: 3 * height / 4},
@@ -88,22 +87,31 @@ const initialY = height + 50;
 const speed = (initialY - yMax) * 4 / tMax;
 const gravity = 2 * speed / tMax;
 const stars = Array(50).fill(true).map((_, i) => {
-	const angle = (random(`angle${i}`) - 0.5) * 2 * 15;
+	const angle = (random(`anglex${i}`) - 0.5) * 2 * 15;
 	const v = speed * (1 + (random(`x${i}`) - 0.5) * 0.1);
 	const vx = v * Math.sin(angle * Math.PI / 180);
 	const vy = v * Math.cos(angle * Math.PI / 180);
+	const vr = (random(`vr${i}`) - 0.5) * 720;
 	return {
 		initialX: width / 2 + (random(`x${i}`) - 0.5) * 400,
 		initialY,
 		vx,
 		vy,
+		vr,
 	};
 });
 
-const Star = ({pos}: {pos: Point}) => {
+const Star = ({pos, r}: {pos: Point, r: number}) => {
 	return (
 		<Translate dx={pos.x} dy={pos.y}>
-			<span style={{color: "yellow", fontWeight: "bold", fontSize: 42}}>*</span>
+			<span style={{
+				color: "yellow",
+				fontWeight: "bold",
+				fontSize: 42,
+				transform: `rotate(${r}deg)`,
+				width: "fit-content",
+				textShadow: "0 0 15px yellow",
+			}}>*</span>
 		</Translate>
 	);
 };
@@ -150,7 +158,7 @@ export const Day25 = ({dayDuration}: {dayDuration: number}) => {
 	};
 
 	const cutY = interpolate(time, [4, 8], [0, height], clamp);
-	const cutNodes = {
+	const cutNodes: {[key: string]: number | undefined} = {
 		ttjrpd: 5,
 		vpshtp: 6,
 		fqndgc: 7,
@@ -190,10 +198,31 @@ export const Day25 = ({dayDuration}: {dayDuration: number}) => {
 						);
 					}
 					))}
+					{Object.entries(cutNodes).map(([inout, t]) => {
+						const inNode = inout.slice(0, 3);
+						const outNode = inout.slice(3, 6);
+						const from = positionNode(inNode);
+						const to = positionNode(outNode);
+						if (time < t) {
+							return null;
+						}
+						const d = interpolate(time - t, [0, 0.2], [delta, 0], clamp);
+						return (
+							<Fragment key={inout}>
+								<path d={`M ${Math.min(from.x, to.x)} ${from.y} h ${d}`} style={{
+									strokeWidth: 1,
+									stroke: "#FFF",
+								}}/>
+								<path d={`M ${Math.max(from.x, to.x)} ${to.y} h ${-d}`} style={{
+									strokeWidth: 1,
+									stroke: "#FFF",
+								}}/>
+							</Fragment>
+						);
+					})}
 				</Svg>
 			)}
 			{isPart1 && <Line from={{x: width / 2, y: 0}} to={{x: width / 2, y: cutY}} width={2} color="#0C0"/>}
-			{isPart2 && <Outro/>}
 			{isPart2 && stars.map((star, i) => {
 				const t = time - 8 - i * 5.5 / 50;
 				if (t < 0) {
@@ -201,8 +230,10 @@ export const Day25 = ({dayDuration}: {dayDuration: number}) => {
 				}
 				const x = star.initialX + star.vx * t;
 				const y = star.initialY - star.vy * t + gravity * t * t / 2;
-				return <Star pos={{x, y}}/>
+				const r = t * star.vr;
+				return <Star pos={{x, y}} r={r}/>
 			})}
+			{isPart2 && <Outro/>}
 		</DayWrapper>
 	);
 };

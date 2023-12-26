@@ -3,10 +3,10 @@
 
 // Note: When using the Node.JS APIs, the config file doesn't apply. Instead, pass options directly to the APIs
 
-import {Config} from '@remotion/cli/config';
+import {Config} from "@remotion/cli/config";
 
-Config.setVideoImageFormat('jpeg');
+Config.setVideoImageFormat("png");
 Config.setOverwriteOutput(true);
-Config.setVideoBitrate("2.5M");
+Config.setCrf(18);
 Config.setDelayRenderTimeoutInMilliseconds(300000);
 Config.setChromiumMultiProcessOnLinux(true);

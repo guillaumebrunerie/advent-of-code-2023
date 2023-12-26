@@ -187,7 +187,7 @@ const Garden = memo(({
 	const y0 = helper ? 0 : (height - cellSize * garden.length) / 2;
 
 	return (
-		<Svg w={helper ? 131*8 : undefined} h={helper ? 131*8 : undefined} style={{opacity: boring ? 0.4 : 1}}>
+		<Svg w={helper ? 131*8 : undefined} h={helper ? 131*8 : undefined} style={{opacity: boring ? 0.3 : 1}}>
 			{garden.flatMap((line, y) => line.map((char, x) => {
 				if (char === "X" && (x + y) % 2 === 0) {
 					char = "Y";
@@ -279,7 +279,7 @@ export const Day21 = ({dayDuration}: {dayDuration: number}) => {
 
 	return (
 		<DayWrapper day={21} title="Step Counter" dayDuration={dayDuration}>
-			{isPart1 && range(0, 0).map(y => range(0, 0).map(x => (
+			{isPart1 && range(0, 0).map(y => range(-1, 1).map(x => (
 				<Translate dx={cellSize * garden.length * x} dy={cellSize * garden.length * y}>
 					<Garden garden={history[index]} boring={x !== 0}/>
 				</Translate>

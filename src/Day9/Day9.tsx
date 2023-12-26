@@ -5,6 +5,7 @@ import { Fragment, ReactNode, useCallback, useMemo } from "react";
 import { DayWrapper } from "../FullVideo/DayWrapper";
 import { Dot } from "../common/Dot";
 import { Path } from "../common/Path";
+import { Day10 } from "../Day10/Day10";
 
 const solve = () => {
 	const data = raw.split("\n").map(line => line.split(" ").map(Number));
@@ -117,25 +118,36 @@ export const Day9 = ({dayDuration}: {dayDuration: number}) => {
 	const isPart1 = time < dayDuration / 2;
 	const {data, functions} = useMemo(solve, []);
 	const index = Math.floor(time);
+
 	const points = data[index];
+	const prevPoints = index % 8 == 0 ? points : data[index - 1];
+
+	const func = functions[index];
+	const prevFunc = index % 8 == 0 ? func : functions[index - 1];
+
 	const convertX = useCallback((x: number) => interpolate(
 		x,
 		isPart1 ? [0, points.length + 1] : [-1, points.length],
 		[20, width - 20],
 	), [isPart1, points.length]);
-	const convertY = useCallback((y: number) => interpolate(
-		y,
-		isPart1
-			? [Math.min(...points, functions[index](points.length)), Math.max(...points, functions[index](points.length))]
-			: [Math.min(...points.slice(0, points.length / 2)), Math.max(...points.slice(0, points.length / 2))],
-		[height - 60, 20],
-	), [functions, index, isPart1, points]);
+	const convertY = (y: number) => {
+		const calculateThing = (f: (...args: number[]) => number, points: number[], lastPoint: number) => (
+			isPart1 ? f(...points, lastPoint) : f(...points.slice(0, points.length / 2))
+		);
+		const yMinNow = calculateThing(Math.min, points, func(points.length));
+		const yMaxNow = calculateThing(Math.max, points, func(points.length));
+		const yMinPrev = calculateThing(Math.min, prevPoints, prevFunc(prevPoints.length));
+		const yMaxPrev = calculateThing(Math.max, prevPoints, prevFunc(prevPoints.length));
+		const yMin = interpolate(time % 1, [0, 0.15], [yMinPrev, yMinNow], clamp);
+		const yMax = interpolate(time % 1, [0, 0.15], [yMaxPrev, yMaxNow], clamp);
+		return interpolate(y, [yMin, yMax], [height - 60, 20]);
+	};
 	const resolution = 100;
 	const iMax = isPart1 ? interpolate((time % 1), [0, 0.85], [0, resolution], clamp) : resolution;
 	const iMin = isPart1 ? 0 : interpolate((time % 1), [0, 0.85], [resolution, 0], clamp);
 	const background = useMemo((): ReactNode => data.map((points, index) => {
 		const resolution = 100;
-		const pts = Array(resolution).fill(true).map((_, i) => {
+		const pts = Array(resolution + 1).fill(true).map((_, i) => {
 			const x = i / resolution * (points.length + 2) - 1;
 			const pt = {
 				x: convertX(x),
@@ -171,12 +183,14 @@ export const Day9 = ({dayDuration}: {dayDuration: number}) => {
 		x: convertX(x),
 		y: convertY(functions[index](x)),
 	};
+	const lineOpacity = interpolate(time % 1, [0.15, 0.3], [0, 1], clamp);
+	const pointOpacity = (i: number) => isPart1 ? interpolate(time % 1 - i * 0.035, [0.05, 0.2], [0, 1], clamp) : interpolate(time % 1 - (points.length - i) * 0.035, [0.05, 0.2], [0, 1], clamp);
 	return (
 		<DayWrapper day={9} title="Mirage Maintenance" dayDuration={dayDuration}>
 			{background}
-			<Path d={`M ${pt.x} ${pt.y} ${pts.join(" ")}`} style={{strokeWidth: 3, stroke: "#FFFFFF"}}/>
+			<Path d={`M ${pt.x} ${pt.y} ${pts.join(" ")}`} style={{strokeWidth: 3, stroke: "#FFF", opacity: lineOpacity}}/>
 			{points.map((y, i) => (
-				<Dot key={i} c={{x: convertX(i), y: convertY(y)}} r={6} style={{backgroundColor: white}}/>
+				<Dot key={i} c={{x: convertX(i), y: convertY(y)}} r={6} style={{backgroundColor: "#FFF", opacity: pointOpacity(i)}}/>
 			))}
 			<Dot
 				c={{
@@ -185,8 +199,8 @@ export const Day9 = ({dayDuration}: {dayDuration: number}) => {
 				}}
 				r={10}
 				style={{
-					backgroundColor: "#00CC00",
-					boxShadow: `0 0 4px #00CC00, 0 0 10px #00CC00`,
+					backgroundColor: "#0C0",
+					boxShadow: `0 0 4px #0C0, 0 0 10px #0C0`,
 					opacity: interpolate(time % 1, [0.25, 0.75], [0, 1], clamp),
 				}}
 			/>

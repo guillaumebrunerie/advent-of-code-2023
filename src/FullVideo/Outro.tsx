@@ -9,7 +9,6 @@ import {
 import { clamp } from "../constants";
 import { Wrapper } from "../common/Wrapper";
 import { InitialFlash } from "../common/Flashes";
-import { Background } from "../common/Background";
 
 export const Outro = () => {
 	const { fps } = useVideoConfig();
@@ -26,7 +25,6 @@ export const Outro = () => {
 
 	return (
 		<Wrapper>
-			<Background/>
 			<AbsoluteFill
 				style={{
 					color: "#ffffff",
